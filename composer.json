@@ -1,0 +1,5 @@
+{
+    "require": {
+        "symfony/ldap": "^3.4"
+    }
+}

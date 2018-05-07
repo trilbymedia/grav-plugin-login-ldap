@@ -1,0 +1,135 @@
+name: Login Ldap
+version: 0.1.0
+description: Allows authentication against an LDAP Server
+icon: plug
+author:
+  name: Trilby Media
+  email: hello@trilby.media
+homepage: https://github.com/trilbymedia/grav-plugin-login-ldap
+demo: http://demo.yoursite.com
+keywords: grav, plugin, etc
+bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
+docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
+license: MIT
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    server_section:
+      type: section
+      title: LDAP Server
+
+      fields:
+
+        host:
+          type: text
+          label: Host
+          help: Host name of the LDAP server
+          validate:
+            required: true
+
+        port:
+          type: number
+          label: Port
+          default: 389
+          help: Port to connect to host
+          validate:
+            required: true
+
+        version:
+          type: number
+          label: Version
+          default: 3
+          help: LDAP Version 3 is most popular, only change this if you know what you are doing
+          validate:
+            required: true
+
+        ssl:
+          type: toggle
+          label: Use SSL
+          default: 0
+          highlight: 0
+          options:
+              1: PLUGIN_ADMIN.YES
+              0: PLUGIN_ADMIN.NO
+          validate:
+              type: bool
+
+        start_tls:
+          type: toggle
+          label: Negotiate TLS
+          help: Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted)
+          default: 0
+          highlight: 0
+          options:
+              1: PLUGIN_ADMIN.YES
+              0: PLUGIN_ADMIN.NO
+          validate:
+              type: bool
+
+        opt_referrals:
+          type: toggle
+          label: Follow Referrals
+          help: Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers)
+          default: 0
+          highlight: 0
+          options:
+              1: PLUGIN_ADMIN.YES
+              0: PLUGIN_ADMIN.NO
+          validate:
+              type: bool
+
+    config_section:
+      type: section
+      title: LDAP Configuration
+
+      fields:
+
+        user_dn:
+          type: text
+          label: User Search DN
+          placeholder: uid=[username],dc=company,dc=com
+          help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
+          validate:
+            required: true
+
+        data_dn:
+          type: text
+          label: User Data DN
+          placeholder: dc=company,dc=com
+          help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
+
+        map_username:
+          type: text
+          label: Username Mapping
+          help: LDAP Attribute(s) that contains the user's username
+          placeholder: uid
+          validate:
+            required: true
+
+        map_fullname:
+          type: text
+          label: User Fullname Mapping
+          help: LDAP Attribute(s) that contains the user's full name
+          placeholder: givenName lastName
+          validate:
+            required: true
+
+        map_email:
+           type: text
+           label: User Email Mapping
+           help: LDAP Attribute that contains the user's email
+           placeholder: mail
+           validate:
+             required: true
