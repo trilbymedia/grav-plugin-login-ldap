@@ -29,12 +29,14 @@ form:
     server_section:
       type: section
       title: LDAP Server
+      underline: true
 
       fields:
 
         host:
           type: text
           label: Host
+          size: large
           help: Host name of the LDAP server
           validate:
             required: true
@@ -43,6 +45,7 @@ form:
           type: number
           label: Port
           default: 389
+          size: x-small
           help: Port to connect to host
           validate:
             required: true
@@ -51,6 +54,7 @@ form:
           type: number
           label: Version
           default: 3
+          size: x-small
           help: LDAP Version 3 is most popular, only change this if you know what you are doing
           validate:
             required: true
@@ -93,12 +97,14 @@ form:
     config_section:
       type: section
       title: LDAP Configuration
+      underline: true
 
       fields:
 
         user_dn:
           type: text
           label: User Search DN
+          size: large
           placeholder: uid=[username],dc=company,dc=com
           help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
           validate:
@@ -107,12 +113,14 @@ form:
         data_dn:
           type: text
           label: User Data DN
+          size: large
           placeholder: dc=company,dc=com
           help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
 
         map_username:
           type: text
           label: Username Mapping
+          size: large
           help: LDAP Attribute(s) that contains the user's username
           placeholder: uid
           validate:
@@ -121,6 +129,7 @@ form:
         map_fullname:
           type: text
           label: User Fullname Mapping
+          size: large
           help: LDAP Attribute(s) that contains the user's full name
           placeholder: givenName lastName
           validate:
@@ -129,7 +138,57 @@ form:
         map_email:
            type: text
            label: User Email Mapping
+           size: large
            help: LDAP Attribute that contains the user's email
            placeholder: mail
            validate:
              required: true
+
+    advanced_section:
+      type: section
+      title: Advanced Configuration
+      underline: true
+
+      fields:
+
+        save_grav_user:
+          type: toggle
+          label: Save Grav user
+          highlight: 0
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        store_ldap_data:
+          type: toggle
+          label: Store LDAP data
+          help: If sotring a local Grav user, you can also store LDAP data to use in Grav
+          highlight: 0
+          default: 0
+          options:
+            1: Enabled
+            0: Disabled
+          validate:
+            type: bool
+
+        default_access_levels.groups:
+          type: selectize
+          size: large
+          label: Default Groups
+          '@data-options': '\Grav\User\Groups::groups'
+          classes: fancy
+          validate:
+            type: commalist
+
+        default_access_levels.access.site:
+          type: array
+          label: Default Site Access
+          multiple: false
+          placeholder_key: login
+          placeholder_value: 'true'
+          validate:
+            type: array
+            required: true

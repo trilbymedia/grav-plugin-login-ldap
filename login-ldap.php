@@ -66,44 +66,99 @@ class LoginLDAPPlugin extends Plugin
 
     public function userLoginAuthenticate(UserLoginEvent $event)
     {
-        $username = $event->getUser();
         $credentials = $event->getCredentials();
 
-        // This gets fired for user authentication.
-        $username="cn=amiller,ou=users,dc=trilbymedia,dc=com";
-        $credentials="gom8Jabar";
+        // Get Proper username
+        $user_dn    = $this->config->get('plugins.login-ldap.user_dn');
+        $search_dn  = $this->config->get('plugins.login-ldap.search_dn');
+        $username   = str_replace('[username]', $credentials['username'], $user_dn);
+
+        // Get Host info
+        $host           = $this->config->get('plugins.login-ldap.host');
+        $port           = $this->config->get('plugins.login-ldap.port');
+        $version        = $this->config->get('plugins.login-ldap.version');
+        $ssl            = $this->config->get('plugins.login-ldap.ssl');
+        $start_tls      = $this->config->get('plugins.login-ldap.start_tls');
+        $opt_referrals  = $this->config->get('plugins.login-ldap.opt_referrals');
+
+        // Set Encryption
+        if ((bool) $ssl) {
+            $encryption = 'ssl';
+        } elseif ((bool) $start_tls) {
+            $encryption = 'tls';
+        } else {
+            $encryption = 'none';
+        }
 
         try {
 
             $ldap = Ldap::create('ext_ldap', array(
-                'host' => 'ldap.trilbymedia.com',
+                'host' => $host,
+                'port' => $port,
+                'encryption' => $encryption,
+                'options' => array(
+                    'protocol_version' => $version,
+                    'referrals' => (bool) $opt_referrals,
+                ),
             ));
 
+            // Map Info
+            $map_username = $this->config->get('plugins.login-ldap.map_username');
+            $map_fullname = $this->config->get('plugins.login-ldap.map_fullname');
+            $map_email    = $this->config->get('plugins.login-ldap.map_email');
 
-            $ldap->bind($username, $credentials);
+            $ldap->bind($username, $credentials['password']);
 
-
-
-            $query = $ldap->query('dc=trilbymedia,dc=com', 'uid=amiller');
-            $results = $query->execute();
-
-            $userdata = ['ldap' => $results[0]->getAttributes()];
-            unset($userdata['ldap']['userPassword']);
+            $query = $ldap->query($search_dn, $map_username .'='. $credentials['username']);
+            $results = $query->execute()->toArray();
 
             // Create Grav User
             $grav_user = User::load($username);
 
+            // Get LDAP Data
+            $ldap_data = array_shift($results)->getAttributes();
+            $userdata = [];
+
+            $userdata['login'] = $this->getLDAPMappedItem($map_username, $ldap_data);
+            $userdata['fullname'] = $this->getLDAPMappedItem($map_fullname, $ldap_data);
+            $userdata['email'] = $this->getLDAPMappedItem($map_email, $ldap_data);
+
+            // Get LDAP Data if required
+            if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
+//                $userdata['ldap'] = $ldap_data;
+                foreach($ldap_data as $key => $data) {
+                    $userdata['ldap'][$key] = array_shift($data);
+                }
+                unset($userdata['ldap']['userPassword']);
+            }
+
+            $grav_user->merge($userdata);
+
+            // Set Groups
+            $current_groups = $grav_user->get('groups');
+            if (!$current_groups) {
+                $groups = $this->config->get('plugins.login-ldap.default_access_levels.groups', []);
+                if (count($groups) > 0) {
+                    $data['groups'] = $groups;
+                    $grav_user->merge($data);
+                }
+            }
+
+            // Set Access
             $current_access = $grav_user->get('access');
-            if (!$current_access) {
-                $access = $this->config->get('plugins.login.user_registration.access.site', []);
+            $access = $this->config->get('plugins.login-ldap.default_access_levels.access.site');
+
+            if (!$current_access && $access) {
                 if (count($access) > 0) {
                     $data['access']['site'] = $access;
                     $grav_user->merge($data);
                 }
             }
 
-            $grav_user->merge($userdata);
-            $grav_user->save();
+            // Optional save
+            if ($this->config->get('plugins.login-ldap.save_grav_user', false)) {
+                $grav_user->save();
+            }
 
             $event->setUser($grav_user);
 
@@ -114,6 +169,8 @@ class LoginLDAPPlugin extends Plugin
 
         } catch (ConnectionException $e) {
             print $e->getMessage();
+
+            $this->grav['log']->error('plugin.login-ldap: ' . $username . ' - ' . $e->getMessage());
 
             $event->setStatus($event::AUTHENTICATION_FAILURE);
             $event->stopPropagation();
@@ -138,4 +195,16 @@ class LoginLDAPPlugin extends Plugin
         // This gets fired on user logout.
     }
 
+    protected function getLDAPMappedItem($map, $ldap_data)
+    {
+        $item_bits = [];
+        $map_bits = explode(' ', $map);
+        foreach($map_bits as $bit) {
+            if(isset($ldap_data[$bit])) {
+            $item_bits[] = array_shift($ldap_data[$bit]);
+            }
+        }
+        $item = implode(' ', $item_bits);
+        return $item;
+    }
 }
