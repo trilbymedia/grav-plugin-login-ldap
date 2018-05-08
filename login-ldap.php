@@ -91,7 +91,7 @@ class LoginLDAPPlugin extends Plugin
         }
 
         try {
-
+            /** @var Ldap $ldap */
             $ldap = Ldap::create('ext_ldap', array(
                 'host' => $host,
                 'port' => $port,
@@ -125,7 +125,6 @@ class LoginLDAPPlugin extends Plugin
 
             // Get LDAP Data if required
             if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
-//                $userdata['ldap'] = $ldap_data;
                 foreach($ldap_data as $key => $data) {
                     $userdata['ldap'][$key] = array_shift($data);
                 }
