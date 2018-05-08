@@ -1,13 +1,13 @@
-name: Login Ldap
+name: Login LDAP
 version: 0.1.0
-description: Allows authentication against an LDAP Server
-icon: plug
+description: Allows for Grav user authentication against an LDAP Server such as OpenLDAP or ActiveDirectory
+icon: user-circle-o
 author:
   name: Trilby Media
   email: hello@trilby.media
 homepage: https://github.com/trilbymedia/grav-plugin-login-ldap
 demo: http://demo.yoursite.com
-keywords: grav, plugin, etc
+keywords: grav, plugin, login, ldap, active directory, authentication
 bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
 docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
 license: MIT
@@ -28,7 +28,7 @@ form:
 
     server_section:
       type: section
-      title: LDAP Server
+      title: Server Configuration
       underline: true
 
       fields:
@@ -110,7 +110,7 @@ form:
           validate:
             required: true
 
-        data_dn:
+        search_dn:
           type: text
           label: User Data DN
           size: large
