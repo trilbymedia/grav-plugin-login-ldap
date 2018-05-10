@@ -2,7 +2,7 @@
 
 The **Login LDAP** Plugin for [Grav CMS](http://github.com/getgrav/grav) allows user authentication against an LDAP Server. 
 
-## Installation
+### Installation
 
 Installing the Login LDAP plugin can be done in one of two ways. The GPM (Grav Package Manager) installation method enables you to quickly and easily install the plugin with a simple terminal command, while the manual method enables you to do so via a zip file.
 
@@ -91,7 +91,7 @@ default_access_levels:
 
 > Note that if you use the admin plugin, a file with your configuration will be saved in the `user/config/plugins/login-ldap.yaml`.
 
-## Usage
+### Usage
 
 Once properly configured, the functionality of the LDAP plugin is transparent to the user.  A user will be able to login via the normal login process and have access based on their account setup. 
 

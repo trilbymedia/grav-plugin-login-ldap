@@ -29,179 +29,201 @@ form:
       validate:
         type: bool
 
-    server_section:
-      type: section
-      title: Server Configuration
-      underline: true
+    ldap_tabs:
+      type: tabs
 
       fields:
 
-        host:
-          type: text
-          label: Host
-          size: large
-          help: Host name of the LDAP server
-          placeholder: ldap.yourcompany.com
-          validate:
-            required: true
+        tab_1:
+          type: tab
+          title: Configuration Options
+          fields:
 
-        port:
-          type: number
-          label: Port
-          default: 389
-          size: x-small
-          help: Port to connect to host
-          validate:
-            required: true
+            server_section:
+              type: section
+              title: Server Configuration
+              underline: true
 
-        version:
-          type: number
-          label: Version
-          default: 3
-          size: x-small
-          help: LDAP Version 3 is most popular, only change this if you know what you are doing
-          validate:
-            required: true
+              fields:
 
-        ssl:
-          type: toggle
-          label: Use SSL
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                host:
+                  type: text
+                  label: Host
+                  size: large
+                  help: Host name of the LDAP server
+                  placeholder: ldap.yourcompany.com
+                  validate:
+                    required: true
 
-        start_tls:
-          type: toggle
-          label: Negotiate TLS
-          help: Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted)
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                port:
+                  type: number
+                  label: Port
+                  default: 389
+                  size: x-small
+                  help: Port to connect to host
+                  validate:
+                    required: true
 
-        opt_referrals:
-          type: toggle
-          label: Follow Referrals
-          help: Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers)
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                version:
+                  type: number
+                  label: Version
+                  default: 3
+                  size: x-small
+                  help: LDAP Version 3 is most popular, only change this if you know what you are doing
+                  validate:
+                    required: true
 
-    config_section:
-      type: section
-      title: LDAP Configuration
-      underline: true
+                ssl:
+                  type: toggle
+                  label: Use SSL
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-      fields:
+                start_tls:
+                  type: toggle
+                  label: Negotiate TLS
+                  help: Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted)
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-        user_dn:
-          type: text
-          label: User DN
-          size: large
-          placeholder: uid=[username],dc=company,dc=com
-          help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
-          validate:
-            required: true
+                opt_referrals:
+                  type: toggle
+                  label: Follow Referrals
+                  help: Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers)
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-        search_dn:
-          type: text
-          label: User Search DN
-          size: large
-          placeholder: ou=users,dc=company,dc=com
-          help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
-          validate:
-            required: true
+            config_section:
+              type: section
+              title: LDAP Configuration
+              underline: true
 
-        group_dn:
-          type: text
-          label: Group Search DN
-          size: large
-          placeholder: ou=groups,dc=company,dc=com
-          help: String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file
+              fields:
 
-        map_username:
-          type: text
-          label: Username Mapping
-          size: large
-          help: LDAP Attribute(s) that contains the user's username
-          placeholder: uid
-          validate:
-            required: true
+                user_dn:
+                  type: text
+                  label: User DN
+                  size: large
+                  placeholder: uid=[username],dc=company,dc=com
+                  help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
+                  validate:
+                    required: true
 
-        map_fullname:
-          type: text
-          label: User Fullname Mapping
-          size: large
-          help: LDAP Attribute(s) that contains the user's full name
-          placeholder: givenName lastName
-          validate:
-            required: true
+                search_dn:
+                  type: text
+                  label: User Search DN
+                  size: large
+                  placeholder: ou=users,dc=company,dc=com
+                  help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
+                  validate:
+                    required: true
 
-        map_email:
-           type: text
-           label: User Email Mapping
-           size: large
-           help: LDAP Attribute that contains the user's email
-           placeholder: mail
-           validate:
-             required: true
+                group_dn:
+                  type: text
+                  label: Group Search DN
+                  size: large
+                  placeholder: ou=groups,dc=company,dc=com
+                  help: String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file
 
-    advanced_section:
-      type: section
-      title: Advanced Configuration
-      underline: true
+                map_username:
+                  type: text
+                  label: Username Mapping
+                  size: large
+                  help: LDAP Attribute(s) that contains the user's username
+                  placeholder: uid
+                  validate:
+                    required: true
 
-      fields:
+                map_fullname:
+                  type: text
+                  label: User Fullname Mapping
+                  size: large
+                  help: LDAP Attribute(s) that contains the user's full name
+                  placeholder: givenName lastName
+                  validate:
+                    required: true
 
-        save_grav_user:
-          type: toggle
-          label: Save Grav user
-          highlight: 0
-          default: 0
-          options:
-            1: Enabled
-            0: Disabled
-          validate:
-            type: bool
+                map_email:
+                   type: text
+                   label: User Email Mapping
+                   size: large
+                   help: LDAP Attribute that contains the user's email
+                   placeholder: mail
+                   validate:
+                     required: true
 
-        store_ldap_data:
-          type: toggle
-          label: Store LDAP data
-          help: If storing a local Grav user, you can also store LDAP data to use in Grav
-          highlight: 0
-          default: 0
-          options:
-            1: Enabled
-            0: Disabled
-          validate:
-            type: bool
+            advanced_section:
+              type: section
+              title: Advanced Configuration
+              underline: true
 
-        default_access_levels.groups:
-          type: selectize
-          size: large
-          label: Default Groups
-          '@data-options': '\Grav\User\Groups::groups'
-          classes: fancy
-          validate:
-            type: commalist
+              fields:
 
-        default_access_levels.access.site:
-          type: array
-          label: Default Site Access
-          multiple: false
-          placeholder_key: login
-          placeholder_value: 'true'
-          validate:
-            type: array
-            required: true
+                save_grav_user:
+                  type: toggle
+                  label: Save Grav user
+                  highlight: 0
+                  default: 0
+                  options:
+                    1: Enabled
+                    0: Disabled
+                  validate:
+                    type: bool
+
+                store_ldap_data:
+                  type: toggle
+                  label: Store LDAP data
+                  help: If storing a local Grav user, you can also store LDAP data to use in Grav
+                  highlight: 0
+                  default: 0
+                  options:
+                    1: Enabled
+                    0: Disabled
+                  validate:
+                    type: bool
+
+                default_access_levels.groups:
+                  type: selectize
+                  size: large
+                  label: Default Groups
+                  '@data-options': '\Grav\User\Groups::groups'
+                  classes: fancy
+                  validate:
+                    type: commalist
+
+                default_access_levels.access.site:
+                  type: array
+                  label: Default Site Access
+                  multiple: false
+                  placeholder_key: login
+                  placeholder_value: 'true'
+                  validate:
+                    type: array
+                    required: true
+
+        tab_2:
+          type: tab
+          title: Instructions
+          fields:
+
+            ldap_instructions:
+              type: display
+              markdown: true
+              style: vertical
+              file: 'plugins://login-ldap/README.md'
+
