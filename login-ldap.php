@@ -70,6 +70,7 @@ class LoginLDAPPlugin extends Plugin
 
         // Get Proper username
         $user_dn    = $this->config->get('plugins.login-ldap.user_dn');
+        $group_dn   = $this->config->get('plugins.login-ldap.group_dn');
         $search_dn  = $this->config->get('plugins.login-ldap.search_dn');
         $username   = str_replace('[username]', $credentials['username'], $user_dn);
 
@@ -133,6 +134,20 @@ class LoginLDAPPlugin extends Plugin
                     $userdata['ldap'][$key] = array_shift($data);
                 }
                 unset($userdata['ldap']['userPassword']);
+            }
+
+            // Get Groups
+            // retrieves all extra groups for user
+            $query = $ldap->query($group_dn, "(&(cn=*)(memberUid=" . $credentials['username'] . "))");
+            $groups = $query->execute()->toArray();
+
+            // retrieve current primary group for user
+            $query = $ldap->query($group_dn, 'gidnumber=' . $this->getLDAPMappedItem('gidNumber', $ldap_data));
+            $groups = array_merge($groups, $query->execute()->toArray());
+
+            foreach($groups as $group) {
+                $attributes = $group->getAttributes();
+                $userdata['ldap']['groups'][] = array_shift($attributes['cn']);
             }
 
             $grav_user->merge($userdata);
