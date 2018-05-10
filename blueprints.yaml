@@ -12,6 +12,9 @@ bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
 docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
 license: MIT
 
+dependencies:
+  - { name: login, version: '>=2.6.3' }
+
 form:
   validation: strict
   fields:
@@ -38,6 +41,7 @@ form:
           label: Host
           size: large
           help: Host name of the LDAP server
+          placeholder: ldap.yourcompany.com
           validate:
             required: true
 
@@ -103,7 +107,7 @@ form:
 
         user_dn:
           type: text
-          label: User Search DN
+          label: User DN
           size: large
           placeholder: uid=[username],dc=company,dc=com
           help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
@@ -112,10 +116,19 @@ form:
 
         search_dn:
           type: text
-          label: User Data DN
+          label: User Search DN
           size: large
-          placeholder: dc=company,dc=com
+          placeholder: ou=users,dc=company,dc=com
           help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
+          validate:
+            required: true
+
+        group_dn:
+          type: text
+          label: Group Search DN
+          size: large
+          placeholder: ou=groups,dc=company,dc=com
+          help: String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file
 
         map_username:
           type: text
@@ -165,7 +178,7 @@ form:
         store_ldap_data:
           type: toggle
           label: Store LDAP data
-          help: If sotring a local Grav user, you can also store LDAP data to use in Grav
+          help: If storing a local Grav user, you can also store LDAP data to use in Grav
           highlight: 0
           default: 0
           options:
