@@ -42,8 +42,10 @@ version: 3
 ssl: false
 start_tls: false
 opt_referrals: false
-user_dn: uid=[username],dc=company,dc=com
-search_dn: dc=company,dc=com
+user_dn: 'uid=[username],dc=company,dc=com'
+search_dn:
+group_dn:
+group_query: '(&(cn=*)(memberUid=[username]))'
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
@@ -74,8 +76,9 @@ default_access_levels:
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
 |user_dn|DN String used to authenticate a user, where `[username]` is replaced by username value entered via login | e.g. `uid=[username],dc=company,dc=com` |
-|search_dn|DN String used to retrieve user data | e.g. `ou=users,dc=company,dc=com` |
-|group_dn|DN String used to retrieve user group data [OPTIONAL] | e.g. `ou=groups,dc=company,dc=com` |
+|search_dn|DN String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file [OPTIONAL]| e.g. `ou=users,dc=company,dc=com` |
+|group_dn|DN String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file [OPTIONAL] | e.g. `ou=groups,dc=company,dc=com` |
+|group_query|The query used to search Groups. Only change this if you know what you are doing| e.g. `(&(cn=*)(memberUid=[username]))`|
 |map_username|LDAP Attribute(s) that contains the user's username | [default: **uid**] |
 |map_fullname|LDAP Attribute(s) that contains the user's full name | [default: **givenName lastName**] |
 |map_email|LDAP Attribute(s) that contains the user's email address | [default: **mail**] |
@@ -95,4 +98,29 @@ default_access_levels:
 
 Once properly configured, the functionality of the LDAP plugin is transparent to the user.  A user will be able to login via the normal login process and have access based on their account setup. 
 
+For the most basic of authentication, only the `user_dn` is required.  This uses LDAP **bind** to simply map a full user **DN** to an entry in the LDAP directory with an associated password.  If no `search_dn` is provided, once authenticated, the only information available about the user is the `username` provided during login.
+
+#### LDAP User Data
+
+In order to obtain data about the user a valid `search_dn` is required.  This will search the LDAP directory at the level indicated in the DN and search for a userid with the `username` provided.  the `map_username` field is used in this LDAP search query, so it's important that the `map_username` field is one that properly maps the `username` provided during login to the LDAP user entry.  
+
+#### LDAP Group Data
+
+To be able to know the groups a user is associated with, a valid `group_dn` and `group_query` is required. Any invalid information will throw an exception stating that the search could not complete.  
+
+### Storing Grav User
+
+By default the lDAP plugin does not store any local user information.  Upon successfully authenticating against the LDAP user, a user is created and is available during the session.  However, upon returning, the user must re-authenticate and the LDAP data is retrieved again.
+
+If you want to be able to set user data (extra fields, or specific user access) for a particular user, you can enable the `save_grav_user` option, and this will create a local Grav user in the `accounts/` folder.  This is a local record of the user and attributes can be set here.  
+
+> NOTE: Any attribute stored under the `ldap:` key in the user account file will be overwritten by the plugin during the next login.  This information is always in sync with latest data in the LDAP server.  The same rule goes for the **mapped** fields.  So updating `email` in your LDAP directory will ensure the entry in the local Grav user is updated on next login.
+
+### Troubleshooting
+
+If a user is simply unable to authenticate against the LDAP server, an entry will be logged into the Grav log (`logs/grav.log`) file with the attempted `dn`. This can be used to ensure the `user_dn` entry is correct and can be tested against any other LDAP login system.
+
+If either the `user_dn`, `search_dn`, `group_dn` or `group_query` are incorrect an error will be thrown during login, and a message with the error stored in the `logs/grav.log` file.
+
+If you expect `fullname`, or `email` to be stored in the Grav user object, but they are not appearing, it's probably a problem with your field mappings.  Double check with your LDAP administrator that these are the correct mappings.
 

@@ -130,8 +130,6 @@ form:
                   size: large
                   placeholder: ou=users,dc=company,dc=com
                   help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
-                  validate:
-                    required: true
 
                 group_dn:
                   type: text
@@ -140,14 +138,19 @@ form:
                   placeholder: ou=groups,dc=company,dc=com
                   help: String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file
 
+                group_query:
+                  type: text
+                  label: Group Query
+                  size: large
+                  placeholder: '(&(cn=*)(memberUid=[username]))'
+                  help: The query used to search Groups. Only change this if you know what you are doing
+
                 map_username:
                   type: text
                   label: Username Mapping
                   size: large
                   help: LDAP Attribute(s) that contains the user's username
                   placeholder: uid
-                  validate:
-                    required: true
 
                 map_fullname:
                   type: text
@@ -155,8 +158,6 @@ form:
                   size: large
                   help: LDAP Attribute(s) that contains the user's full name
                   placeholder: givenName lastName
-                  validate:
-                    required: true
 
                 map_email:
                    type: text
@@ -164,8 +165,6 @@ form:
                    size: large
                    help: LDAP Attribute that contains the user's email
                    placeholder: mail
-                   validate:
-                     required: true
 
             advanced_section:
               type: section
