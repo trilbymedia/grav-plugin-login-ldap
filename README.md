@@ -67,7 +67,7 @@ default_access_levels:
 |host|The DNS name or IP address of your LDAP server | e.g. ldap.yourcompany.com |
 |port|The TCP port of the host that the LDAP server runs under |  [default: **389**]|
 |version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: **3**]  |
-|ssl|Enable SSL for the connection (typically for port 636or 3269) | true \| [default: **false**] |
+|ssl|Enable SSL for the connection (typically for port 636 or 3269) | true \| [default: **false**] |
 |start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | true \| [default: **false**] |
 |opt_referrals|Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers) | true \| [default: **false**] |
 
@@ -110,11 +110,13 @@ To be able to know the groups a user is associated with, a valid `group_dn` and 
 
 ### Storing Grav User
 
-By default the lDAP plugin does not store any local user information.  Upon successfully authenticating against the LDAP user, a user is created and is available during the session.  However, upon returning, the user must re-authenticate and the LDAP data is retrieved again.
+By default the LDAP plugin does not store any local user information.  Upon successfully authenticating against the LDAP user, a user is created and is available during the session.  However, upon returning, the user must re-authenticate and the LDAP data is retrieved again.
 
 If you want to be able to set user data (extra fields, or specific user access) for a particular user, you can enable the `save_grav_user` option, and this will create a local Grav user in the `accounts/` folder.  This is a local record of the user and attributes can be set here.  
 
 > NOTE: Any attribute stored under the `ldap:` key in the user account file will be overwritten by the plugin during the next login.  This information is always in sync with latest data in the LDAP server.  The same rule goes for the **mapped** fields.  So updating `email` in your LDAP directory will ensure the entry in the local Grav user is updated on next login.
+>  
+> Also note that the password will never be stored in the Grav user under `accounts/`.
 
 ### Troubleshooting
 
