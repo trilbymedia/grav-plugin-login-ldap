@@ -20,3 +20,4 @@ default_access_levels:
   access:
     site:
       login: 'true'
+    groups: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"
