@@ -36,40 +36,40 @@ form:
 
         tab_1:
           type: tab
-          title: Configuration Options
+          title: PLUGIN_LOGIN_LDAP.CONFIGURATION
           fields:
 
             server_section:
               type: section
-              title: Server Configuration
+              title: PLUGIN_LOGIN_LDAP.SERVER_CONFIGURATION
               underline: true
 
               fields:
 
                 host:
                   type: text
-                  label: Host
+                  label: PLUGIN_LOGIN_LDAP.HOST
                   size: large
-                  help: Host name of the LDAP server
+                  help: PLUGIN_LOGIN_LDAP.HOST_DESC
                   placeholder: ldap.yourcompany.com
                   validate:
                     required: true
 
                 port:
                   type: number
-                  label: Port
+                  label: PLUGIN_LOGIN_LDAP.PORT
                   default: 389
                   size: x-small
-                  help: Port to connect to host
+                  help: PLUGIN_LOGIN_LDAP.PORT_DESC
                   validate:
                     required: true
 
                 version:
                   type: number
-                  label: Version
+                  label: PLUGIN_LOGIN_LDAP.VERSION
                   default: 3
                   size: x-small
-                  help: LDAP Version 3 is most popular, only change this if you know what you are doing
+                  help: PLUGIN_LOGIN_LDAP.VERSION_DESC
                   validate:
                     required: true
 
@@ -86,8 +86,8 @@ form:
 
                 start_tls:
                   type: toggle
-                  label: Negotiate TLS
-                  help: Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted)
+                  label: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS
+                  help: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS_DESC
                   default: 0
                   highlight: 0
                   options:
@@ -98,8 +98,8 @@ form:
 
                 opt_referrals:
                   type: toggle
-                  label: Follow Referrals
-                  help: Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers)
+                  label: PLUGIN_LOGIN_LDAP.OPT_REFERRALS
+                  help: PLUGIN_LOGIN_LDAP.OPT_REFERRALS_DESC
                   default: 0
                   highlight: 0
                   options:
@@ -117,123 +117,126 @@ form:
 
                 user_dn:
                   type: text
-                  label: User DN
+                  label: PLUGIN_LOGIN_LDAP.USER_DN
                   size: large
                   placeholder: uid=[username],dc=company,dc=com
-                  help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
+                  help: PLUGIN_LOGIN_LDAP.USER_DN_DESC
                   validate:
                     required: true
 
                 search_dn:
                   type: text
-                  label: User Search DN
+                  label: PLUGIN_LOGIN_LDAP.USER_SEARCH_DN
                   size: large
                   placeholder: ou=users,dc=company,dc=com
-                  help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
+                  help: PLUGIN_LOGIN_LDAP.USER_SEARCH_DN_DESC
 
                 group_dn:
                   type: text
-                  label: Group Search DN
+                  label: PLUGIN_LOGIN_LDAP.GROUP_SEARCH_DN
                   size: large
                   placeholder: ou=groups,dc=company,dc=com
-                  help: String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file
+                  help: PLUGIN_LOGIN_LDAP.GROUP_SEARCH_DN_DESC
 
                 group_query:
                   type: text
-                  label: Group Query
+                  label: PLUGIN_LOGIN_LDAP.GROUP_QUERY
                   size: large
                   placeholder: '(&(cn=*)(memberUid=[username]))'
-                  help: The query used to search Groups. Only change this if you know what you are doing
+                  help: PLUGIN_LOGIN_LDAP.GROUP_QUERY_DESC
 
                 map_username:
                   type: text
-                  label: Username Mapping
+                  label: PLUGIN_LOGIN_LDAP.USERNAME_MAPPING
                   size: large
-                  help: LDAP Attribute(s) that contains the user's username
+                  help: PLUGIN_LOGIN_LDAP.USERNAME_MAPPING_DESC
                   placeholder: uid
 
                 map_fullname:
                   type: text
-                  label: User Fullname Mapping
+                  label: PLUGIN_LOGIN_LDAP.FULLNAME_MAPPING
                   size: large
-                  help: LDAP Attribute(s) that contains the user's full name
+                  help: PLUGIN_LOGIN_LDAP.FULLNAME_MAPPING
                   placeholder: givenName lastName
 
                 map_email:
                    type: text
-                   label: User Email Mapping
+                   label: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING
                    size: large
-                   help: LDAP Attribute that contains the user's email
+                   help: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING_DESC
                    placeholder: mail
-
-            advanced_section:
-              type: section
-              title: Advanced Configuration
-              underline: true
-
-              fields:
-
-                save_grav_user:
-                  type: toggle
-                  label: Save Grav user
-                  highlight: 0
-                  default: 0
-                  options:
-                    1: Enabled
-                    0: Disabled
-                  validate:
-                    type: bool
-
-                store_ldap_data:
-                  type: toggle
-                  label: Store LDAP data
-                  help: If storing a local Grav user, you can also store LDAP data to use in Grav
-                  highlight: 0
-                  default: 0
-                  options:
-                    1: Enabled
-                    0: Disabled
-                  validate:
-                    type: bool
-
-                default_access_levels.groups:
-                  type: selectize
-                  size: large
-                  label: Default Groups
-                  '@data-options': '\Grav\User\Groups::groups'
-                  classes: fancy
-                  validate:
-                    type: commalist
-
-                default_access_levels.access.site:
-                  type: array
-                  label: Default Site Access
-                  multiple: false
-                  placeholder_key: login
-                  placeholder_value: 'true'
-                  validate:
-                    type: array
-                    required: true
-
-                default_access_levels.access.groups:
-                  classes: frontmatter
-                  type: editor
-                  label: Groups Access Level
-                  autofocus: true
-                  default: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"
-                  codemirror:
-                    mode: 'yaml'
-                    indentUnit: 2
-                    autofocus: true
-                    indentWithTabs: false
-                    lineNumbers: true
-                    styleActiveLine: true
-                    gutters: ['CodeMirror-lint-markers']
-                    lint: true
 
         tab_2:
           type: tab
-          title: Instructions
+          title: PLUGIN_LOGIN_LDAP.ADVANCED
+          fields:
+
+            save_grav_user:
+              type: toggle
+              label: PLUGIN_LOGIN_LDAP.SAVE_GRAV_USER
+              help: PLUGIN_LOGIN_LDAP.SAVE_GRAV_USER_DESC
+              highlight: 0
+              default: 0
+              options:
+                1: Enabled
+                0: Disabled
+              validate:
+                type: bool
+
+            store_ldap_data:
+              type: toggle
+              label: PLUGIN_LOGIN_LDAP.STORE_LDAP_USER
+              help: PLUGIN_LOGIN_LDAP.STORE_LDAP_USER_DESC
+              highlight: 0
+              default: 0
+              options:
+                1: Enabled
+                0: Disabled
+              validate:
+                type: bool
+
+            default_access_levels.groups:
+              type: selectize
+              size: large
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_ACCESS_LEVELS_GROUPS
+              '@data-options': '\Grav\User\Groups::groups'
+              classes: fancy
+              validate:
+                type: commalist
+
+            default_access_levels.access.site:
+              type: array
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_ACCESS_LEVELS_SITE
+              multiple: false
+              placeholder_key: login
+              placeholder_value: 'true'
+              validate:
+                type: array
+                required: true
+
+            default_access_levels.access.groups:
+              classes: frontmatter
+              type: editor
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_GROUPS_ACCESS_LEVELS
+              autofocus: true
+              markdown: true
+              description: PLUGIN_LOGIN_LDAP.ACCESS_GROUPS_DESC
+              default: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"
+              codemirror:
+                mode: 'yaml'
+                indentUnit: 2
+                autofocus: true
+                indentWithTabs: false
+                lineNumbers: true
+                styleActiveLine: true
+                gutters: ['CodeMirror-lint-markers']
+                lint: true
+
+
+
+        tab_3:
+          type: tab
+          title: PLUGIN_LOGIN_LDAP.INSTRUCTIONS
           fields:
 
             ldap_instructions:
@@ -241,4 +244,3 @@ form:
               markdown: true
               style: vertical
               file: 'plugins://login-ldap/README.md'
-
