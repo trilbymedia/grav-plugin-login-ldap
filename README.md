@@ -56,7 +56,15 @@ default_access_levels:
   groups: ldap_users
   access:
     site:
-      login: 'true'
+      login: true
+    groups:
+      admin:    
+        admin:
+          login: true
+          super: true 
+      user:
+        site:
+          login: true  
 ```
 
 ### Server Settings
@@ -90,7 +98,9 @@ default_access_levels:
 |save_grav_user|Store the grav user account as a local YAML account | true \| [default: **false**] |
 |store_ldap_data|If storing a local Grav user, you can also store LDAP data so its available in Grav| true \| [default: **false**] |
 |default_access_levels.groups|Set a default group for all users logging in via LDAP [OPTIONAL] | e.g. `ldap_users` |
-|default_access_levels.access.site|The default access to assign to users logging in via LDAP | e.g. `site: [login: 'true']` |
+|default_access_levels.access.site|Set the default **site access** for all users logging in via LDAP (used if no `access.groups` mapping applies) | e.g. `[login: 'true']` |
+|default_access_levels.access.groups|The default **access to assign** to users logging in based on **LDAP group membership**| e.g. `user: [site: [login: 'true']]` |
+
 
 > Note that if you use the admin plugin, a file with your configuration will be saved in the `user/config/plugins/login-ldap.yaml`.
 
@@ -102,11 +112,41 @@ For the most basic of authentication, only the `user_dn` is required.  This uses
 
 #### LDAP User Data
 
-In order to obtain data about the user a valid `search_dn` is required.  This will search the LDAP directory at the level indicated in the DN and search for a userid with the `username` provided.  the `map_username` field is used in this LDAP search query, so it's important that the `map_username` field is one that properly maps the `username` provided during login to the LDAP user entry.  
+In order to obtain data about the user a valid `search_dn` is required.  This will search the LDAP directory at the level indicated in the DN and search for a userid with the `username` provided.  the `map_username` field is used in this LDAP search query, so it's important that the `map_username` field is one that properly maps the `username` provided during login to the LDAP user entry. 
 
 #### LDAP Group Data
 
 To be able to know the groups a user is associated with, a valid `group_dn` and `group_query` is required. Any invalid information will throw an exception stating that the search could not complete.  
+
+
+### LDAP Group to Grav Access Mapping
+
+The LDAP plugin provides a flexible way to map your LDAP users into Grav.  
+
+> For Groups and Access mapping to work properly a valid `search_dn`, `query_dn` and `group_query` is required.
+
+The default configuration for `default_access_levels.access.groups` looks like:
+
+```yaml
+admin:
+    admin:
+        login: true
+      super: true
+    site:
+      login: true
+user:
+  site:
+    login: true
+```
+
+How this works is the two top-level YAML keys (`admin` and `user`) are LDAP groups that if a user is a member of, will assign the subsequent values as the Grav user access.
+
+In order for a front-end user to be able to log into a Grav site the minimum of `site: [login: true]` is required.  So as long as the user is a member of the LDAP group `user`, they will be assigned the necessary access to log in to the front of the site, and nothing more.  You can of course configure this with any access settings you wish to provide. 
+
+For a user to have access to the admin, they must have at least `admin: [login: true]` access, and to be a full administrator with access to everything, they also need to have `admin: [super: true]` access.  In the default configuration, users with LDAP group `admin` will be assigned this access. This will probably need to be modified for your directory configuration.
+
+> NOTE: See the [Groups and Permissions Documentation](https://learn.getgrav.org/advanced/groups-and-permissions?target=_blank) for more information about how Grav permissions work in conjunction with access levels and groups.
+
 
 ### Storing Grav User
 
