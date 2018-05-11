@@ -215,6 +215,22 @@ form:
                     type: array
                     required: true
 
+                default_access_levels.access.groups:
+                  classes: frontmatter
+                  type: editor
+                  label: Groups Access Level
+                  autofocus: true
+                  default: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"
+                  codemirror:
+                    mode: 'yaml'
+                    indentUnit: 2
+                    autofocus: true
+                    indentWithTabs: false
+                    lineNumbers: true
+                    styleActiveLine: true
+                    gutters: ['CodeMirror-lint-markers']
+                    lint: true
+
         tab_2:
           type: tab
           title: Instructions

@@ -7,6 +7,7 @@ use Grav\Plugin\Login\Events\UserLoginEvent;
 use Grav\Plugin\Login\Login;
 use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Ldap\Exception\ConnectionException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class LoginLDAPPlugin
@@ -123,6 +124,7 @@ class LoginLDAPPlugin extends Plugin
             // Set defaults with only thing we know... username provided
             $grav_user['login'] = $credentials['username'];
             $grav_user['fullname'] = $credentials['username'];
+            $user_groups = [];
 
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
@@ -157,10 +159,13 @@ class LoginLDAPPlugin extends Plugin
                     $query = $ldap->query($group_dn, 'gidnumber=' . $this->getLDAPMappedItem('gidNumber', $ldap_data));
                     $groups = array_merge($groups, $query->execute()->toArray());
 
-                    if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
-                        foreach ($groups as $group) {
-                            $attributes = $group->getAttributes();
-                            $userdata['ldap']['groups'][] = array_shift($attributes['cn']);
+                    foreach ($groups as $group) {
+                        $attributes = $group->getAttributes();
+                        $user_group = array_shift($attributes['cn']);
+                        $user_groups[] = $user_group;
+
+                        if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
+                            $userdata['ldap']['groups'][] = $user_group;
                         }
                     }
                 }
@@ -187,6 +192,17 @@ class LoginLDAPPlugin extends Plugin
                 if (count($access) > 0) {
                     $data['access']['site'] = $access;
                     $grav_user->merge($data);
+                }
+            }
+
+            // Give Admin Access
+            $admin_access = $this->config->get('plugins.login-ldap.default_access_levels.access.groups');
+            if ($admin_access && count($user_groups) && strlen($admin_access) > 0) {
+                $groups_access = Yaml::parse($admin_access);
+                foreach ($groups_access as $key => $group_access) {
+                    if (in_array($key, $user_groups)) {
+                        $grav_user->merge(['access' => $group_access]);
+                    }
                 }
             }
 
