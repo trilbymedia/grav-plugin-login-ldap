@@ -139,6 +139,7 @@ class LoginLDAPPlugin extends Plugin
                 $userdata['login'] = $this->getLDAPMappedItem($map_username, $ldap_data);
                 $userdata['fullname'] = $this->getLDAPMappedItem($map_fullname, $ldap_data);
                 $userdata['email'] = $this->getLDAPMappedItem($map_email, $ldap_data);
+                $userdata['provider'] = 'ldap';
 
                 // Get LDAP Data if required
                 if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
