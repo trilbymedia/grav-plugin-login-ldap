@@ -171,3 +171,5 @@ If either the `user_dn`, `search_dn`, `group_dn` or `group_query` are incorrect 
 
 If you expect `fullname`, or `email` to be stored in the Grav user object, but they are not appearing, it's probably a problem with your field mappings.  Double check with your LDAP administrator that these are the correct mappings.
 
+Under the `example` folder you can find a `default.md` page that you can use to see the data collected during LDAP authentication. It's an useful way for configuring the plugin as well as tweaking the Blacklist.
+
