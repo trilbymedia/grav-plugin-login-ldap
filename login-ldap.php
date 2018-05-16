@@ -130,11 +130,18 @@ class LoginLDAPPlugin extends Plugin
 
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
-                $query = $ldap->query($search_dn, $map_username .'='. $credentials['username']);
+                $query_string = $map_username .'='. $credentials['username'];
+                $query = $ldap->query($search_dn, $query_string);
                 $results = $query->execute()->toArray();
 
                 // Get LDAP Data
-                $ldap_data = array_shift($results)->getAttributes();
+                if (empty($results)) {
+                    $this->grav['log']->error('plugin.login-ldap: [401] user search for "' . $query_string . '" returned no user data');
+                    $ldap_data =[];
+                } else {
+                    $ldap_data = array_shift($results)->getAttributes();
+                }
+
                 $userdata = [];
 
                 $userdata['login'] = $this->getLDAPMappedItem($map_username, $ldap_data);
