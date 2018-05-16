@@ -204,6 +204,15 @@ form:
               validate:
                 type: commalist
 
+            blacklist_ldap_fields:
+              type: array
+              type: array
+              value_only: true
+              label: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS
+              help: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS_HELP
+              placeholder_key: key
+              placeholder_value: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS_PLACEHOLDER
+
             default_access_levels.access.site:
               type: array
               label: PLUGIN_LOGIN_LDAP.DEFAULT_ACCESS_LEVELS_SITE

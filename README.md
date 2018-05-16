@@ -159,6 +159,10 @@ If you want to be able to set user data (extra fields, or specific user access) 
 >  
 > Also note that the password will never be stored in the Grav user under `accounts/`.
 
+### Blacklist LDAP Fields
+
+With the Blacklist Fields you have the option of ignoring fields. This is useful for skipping users sensitive data or fields that are stored as media. For example phone numbers, home addresses or images, videos, etc.
+
 ### Troubleshooting
 
 If a user is simply unable to authenticate against the LDAP server, an entry will be logged into the Grav log (`logs/grav.log`) file with the attempted `dn`. This can be used to ensure the `user_dn` entry is correct and can be tested against any other LDAP login system.

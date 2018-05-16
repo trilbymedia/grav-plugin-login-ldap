@@ -84,6 +84,7 @@ class LoginLDAPPlugin extends Plugin
         $ssl            = $this->config->get('plugins.login-ldap.ssl');
         $start_tls      = $this->config->get('plugins.login-ldap.start_tls');
         $opt_referrals  = $this->config->get('plugins.login-ldap.opt_referrals');
+        $blacklist      = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
 
         if (is_null($host)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
@@ -128,7 +129,6 @@ class LoginLDAPPlugin extends Plugin
 
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
-
                 $query = $ldap->query($search_dn, $map_username .'='. $credentials['username']);
                 $results = $query->execute()->toArray();
 
@@ -147,6 +147,13 @@ class LoginLDAPPlugin extends Plugin
                         $userdata['ldap'][$key] = array_shift($data);
                     }
                     unset($userdata['ldap']['userPassword']);
+                }
+
+                // Remove blacklisted fields
+                foreach ($blacklist as $fieldName) {
+                    if (isset($userdata['ldap'][$fieldName])) {
+                        unset($userdata['ldap'][$fieldName]);
+                    }
                 }
 
                 // Get Groups if group_dn if set

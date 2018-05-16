@@ -36,3 +36,6 @@ PLUGIN_LOGIN_LDAP:
   USER_SEARCH_DN_DESC: 'String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file'
   VERSION: 'Version'
   VERSION_DESC: 'LDAP Version 3 is most popular, only change this if you know what you are doing'
+  BLACKLIST_FIELDS: 'Blacklist Fields'
+  BLACKLIST_FIELDS_HELP: 'A list of LDAP fields to be skipped and ignored'
+  BLACKLIST_FIELDS_PLACEHOLDER: 'Field (ie, jpegPhoto, homePostalAddress)'
