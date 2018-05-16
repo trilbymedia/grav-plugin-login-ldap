@@ -16,7 +16,8 @@ map_email: mail
 save_grav_user: false
 store_ldap_data: false
 default_access_levels:
-  groups: ldap_users
+  groups:
+    - ldap_users
   access:
     site:
       login: 'true'
