@@ -3,6 +3,7 @@ namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
 use Grav\Common\User\User;
+use Grav\Common\Utils;
 use Grav\Plugin\Login\Events\UserLoginEvent;
 use Grav\Plugin\Login\Login;
 use Symfony\Component\Ldap\Ldap;
@@ -209,7 +210,8 @@ class LoginLDAPPlugin extends Plugin
                 $groups_access = Yaml::parse($admin_access);
                 foreach ($groups_access as $key => $group_access) {
                     if (in_array($key, $user_groups)) {
-                        $grav_user->merge(['access' => $group_access]);
+                        $access_levels = Utils::arrayMergeRecursiveUnique($grav_user->access, $group_access);
+                        $grav_user->merge(['access' => $access_levels]);
                     }
                 }
             }
