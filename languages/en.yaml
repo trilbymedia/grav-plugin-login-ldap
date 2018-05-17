@@ -23,7 +23,7 @@ PLUGIN_LOGIN_LDAP:
   SAVE_GRAV_USER: 'Save Grav user'
   SAVE_GRAV_USER_DESC: 'Saves the logged in user as a local Grav account'
   STORE_LDAP_USER: 'Store LDAP data'
-  STORE_LDAP_USER_DESC: 'If storing a local Grav user, you can also store LDAP data to use in Grav'
+  STORE_LDAP_USER_DESC: 'You can also store LDAP data on the logged in user object to use in Grav'
   SERVER_CONFIGURATION: 'Server Configuration'
   USE_SSL: 'Use SSL'
   USER_DN: 'User DN'
