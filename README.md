@@ -46,10 +46,10 @@ user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
 group_dn:
 group_query: '(&(cn=*)(memberUid=[username]))'
+group_indentifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
-
 save_grav_user: false
 store_ldap_data: false
 default_access_levels:
@@ -72,32 +72,33 @@ default_access_levels:
 
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
-|enabled|Enables the plugin | [default: **true**] \| false|
-|host|The DNS name or IP address of your LDAP server | e.g. ldap.yourcompany.com |
-|port|The TCP port of the host that the LDAP server runs under |  [default: **389**]|
-|version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: **3**]  |
-|ssl|Enable SSL for the connection (typically for port 636 or 3269) | true \| [default: **false**] |
-|start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | true \| [default: **false**] |
-|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers) | true \| [default: **false**] |
+|enabled|Enables the plugin | [default: `true`] \| `false`|
+|host|The DNS name or IP address of your LDAP server | e.g. `ldap.yourcompany.com` |
+|port|The TCP port of the host that the LDAP server runs under |  [default: `389`]|
+|version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: `3`]  |
+|ssl|Enable SSL for the connection (typically for port 636 or 3269) | `true` \| [default: `false`] |
+|start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | `true` \| [default: `false`] |
+|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers) | `true` \| [default: `false`] |
 
 ### LDAP Configuration
 
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
-|user_dn|DN String used to authenticate a user, where `[username]` is replaced by username value entered via login | e.g. `uid=[username],dc=company,dc=com` |
+|user_dn|DN String used to authenticate a user, where `[username]` is replaced by username value entered via login | [default: `uid=[username],dc=company,dc=com`] |
 |search_dn|DN String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file [OPTIONAL]| e.g. `ou=users,dc=company,dc=com` |
 |group_dn|DN String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file [OPTIONAL] | e.g. `ou=groups,dc=company,dc=com` |
-|group_query|The query used to search Groups. Only change this if you know what you are doing| e.g. `(&(cn=*)(memberUid=[username]))`|
-|map_username|LDAP Attribute(s) that contains the user's username | [default: **uid**] |
-|map_fullname|LDAP Attribute(s) that contains the user's full name | [default: **givenName lastName**] |
-|map_email|LDAP Attribute(s) that contains the user's email address | [default: **mail**] |
+|group_query|The query used to search Groups. Only change this if you know what you are doing| [default: `(&(cn=*)(memberUid=[username]))`] |
+|group_indentifier|The Group identifier that will come back in the response, this is directly related to group query.| [default: `cn`] |
+|map_username|LDAP Attribute(s) that contains the user's username | [default: `uid`] |
+|map_fullname|LDAP Attribute(s) that contains the user's full name | [default: `givenName lastName`] |
+|map_email|LDAP Attribute(s) that contains the user's email address | [default: `mail`] |
 
 ### Advanced Configuration
 
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
-|save_grav_user|Store the grav user account as a local YAML account | true \| [default: **false**] |
-|store_ldap_data|If storing a local Grav user, you can also store LDAP data so its available in Grav| true \| [default: **false**] |
+|save_grav_user|Store the grav user account as a local YAML account | true \| [default: `false`] |
+|store_ldap_data|If storing a local Grav user, you can also store LDAP data so its available in Grav| true \| [default: `false`] |
 |default_access_levels.groups|Set a default group for all users logging in via LDAP [OPTIONAL] | e.g. `ldap_users` |
 |default_access_levels.access.site|Set the default **site access** for all users logging in via LDAP (used if no `access.groups` mapping applies) | e.g. `[login: 'true']` |
 |default_access_levels.access.groups|The default **access to assign** to users logging in based on **LDAP group membership**| e.g. `user: [site: [login: 'true']]` |
@@ -171,5 +172,22 @@ If either the `user_dn`, `search_dn`, `group_dn` or `group_query` are incorrect 
 
 If you expect `fullname`, or `email` to be stored in the Grav user object, but they are not appearing, it's probably a problem with your field mappings.  Double check with your LDAP administrator that these are the correct mappings.
 
-Under the `example` folder you can find a `default.md` page that you can use to see the data collected during LDAP authentication. It's an useful way for configuring the plugin as well as tweaking the Blacklist.
+To get a quick state of your LDAP configuration, you can simply dump out the Grav user on a temporary _secure_ page:
+
+```markdown
+---
+title: LDAP Test
+cache_enabled: false
+process:
+    twig: true
+access:
+    site.login: true
+---
+
+# Grav User
+
+{{ vardump(grav.user) }}
+```
+
+For a more detailed example, you can look in the `example.` folder of this plugin, where you can find a `default.md` page that you can use to see the data collected during LDAP authentication. It's an useful way for configuring the plugin as well as tweaking the Blacklist.
 

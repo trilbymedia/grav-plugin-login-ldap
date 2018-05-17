@@ -71,21 +71,22 @@ class LoginLDAPPlugin extends Plugin
         $credentials = $event->getCredentials();
 
         // Get Proper username
-        $user_dn     = $this->config->get('plugins.login-ldap.user_dn');
-        $search_dn   = $this->config->get('plugins.login-ldap.search_dn');
-        $group_dn    = $this->config->get('plugins.login-ldap.group_dn');
-        $group_query = $this->config->get('plugins.login-ldap.group_query');
+        $user_dn            = $this->config->get('plugins.login-ldap.user_dn');
+        $search_dn          = $this->config->get('plugins.login-ldap.search_dn');
+        $group_dn           = $this->config->get('plugins.login-ldap.group_dn');
+        $group_query        = $this->config->get('plugins.login-ldap.group_query');
+        $group_indentifier  = $this->config->get('plugins.login-ldap.group_indentifier');
 
         $username   = str_replace('[username]', $credentials['username'], $user_dn);
 
         // Get Host info
-        $host           = $this->config->get('plugins.login-ldap.host');
-        $port           = $this->config->get('plugins.login-ldap.port');
-        $version        = $this->config->get('plugins.login-ldap.version');
-        $ssl            = $this->config->get('plugins.login-ldap.ssl');
-        $start_tls      = $this->config->get('plugins.login-ldap.start_tls');
-        $opt_referrals  = $this->config->get('plugins.login-ldap.opt_referrals');
-        $blacklist      = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
+        $host               = $this->config->get('plugins.login-ldap.host');
+        $port               = $this->config->get('plugins.login-ldap.port');
+        $version            = $this->config->get('plugins.login-ldap.version');
+        $ssl                = $this->config->get('plugins.login-ldap.ssl');
+        $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
+        $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
+        $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
 
         if (is_null($host)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
@@ -177,7 +178,7 @@ class LoginLDAPPlugin extends Plugin
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
-                        $user_group = array_shift($attributes['cn']);
+                        $user_group = array_shift($attributes[$group_indentifier]);
                         $user_groups[] = $user_group;
 
                         if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {

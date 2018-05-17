@@ -9,6 +9,7 @@ user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
 group_dn:
 group_query: '(&(cn=*)(memberUid=[username]))'
+group_indentifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail

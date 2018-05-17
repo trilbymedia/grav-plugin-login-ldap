@@ -1,5 +1,5 @@
 name: Login LDAP
-version: 0.1.1
+version: 0.1.2
 description: Allows for Grav user authentication against an LDAP Server such as OpenLDAP or ActiveDirectory
 icon: user-circle-o
 author:
@@ -144,6 +144,13 @@ form:
                   size: large
                   placeholder: '(&(cn=*)(memberUid=[username]))'
                   help: PLUGIN_LOGIN_LDAP.GROUP_QUERY_DESC
+
+                group_indentifier:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.GROUP_IDENTIFIER
+                  size: large
+                  placeholder: 'cn'
+                  help: PLUGIN_LOGIN_LDAP.GROUP_IDENTIFIER_DESC
 
                 map_username:
                   type: text
