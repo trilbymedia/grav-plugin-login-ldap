@@ -5,10 +5,21 @@ version: 3
 ssl: false
 start_tls: false
 opt_referrals: false
-user_dn: uid=[username],dc=company,dc=com
-search_dn: dc=company,dc=com
+user_dn: 'uid=[username],dc=company,dc=com'
+search_dn:
+group_dn:
+group_query: '(&(cn=*)(memberUid=[username]))'
+group_indentifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
 
-
+save_grav_user: false
+store_ldap_data: false
+default_access_levels:
+  groups:
+    - ldap_users
+  access:
+    site:
+      login: 'true'
+    groups: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"

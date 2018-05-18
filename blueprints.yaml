@@ -1,16 +1,19 @@
-name: Login Ldap
-version: 0.1.0
-description: Allows authentication against an LDAP Server
-icon: plug
+name: Login LDAP
+version: 1.0.0
+description: Allows for Grav user authentication against an LDAP Server such as OpenLDAP or ActiveDirectory
+icon: user-circle-o
 author:
   name: Trilby Media
   email: hello@trilby.media
 homepage: https://github.com/trilbymedia/grav-plugin-login-ldap
 demo: http://demo.yoursite.com
-keywords: grav, plugin, etc
+keywords: grav, plugin, login, ldap, active directory, authentication
 bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
 docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
 license: MIT
+
+dependencies:
+  - { name: login, version: '>=2.6.3' }
 
 form:
   validation: strict
@@ -26,110 +29,234 @@ form:
       validate:
         type: bool
 
-    server_section:
-      type: section
-      title: LDAP Server
+    ldap_tabs:
+      type: tabs
 
       fields:
 
-        host:
-          type: text
-          label: Host
-          help: Host name of the LDAP server
-          validate:
-            required: true
+        tab_1:
+          type: tab
+          title: PLUGIN_LOGIN_LDAP.CONFIGURATION
+          fields:
 
-        port:
-          type: number
-          label: Port
-          default: 389
-          help: Port to connect to host
-          validate:
-            required: true
+            server_section:
+              type: section
+              title: PLUGIN_LOGIN_LDAP.SERVER_CONFIGURATION
+              underline: true
 
-        version:
-          type: number
-          label: Version
-          default: 3
-          help: LDAP Version 3 is most popular, only change this if you know what you are doing
-          validate:
-            required: true
+              fields:
 
-        ssl:
-          type: toggle
-          label: Use SSL
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                host:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.HOST
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.HOST_DESC
+                  placeholder: ldap.yourcompany.com
+                  validate:
+                    required: true
 
-        start_tls:
-          type: toggle
-          label: Negotiate TLS
-          help: Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted)
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                port:
+                  type: number
+                  label: PLUGIN_LOGIN_LDAP.PORT
+                  default: 389
+                  size: x-small
+                  help: PLUGIN_LOGIN_LDAP.PORT_DESC
+                  validate:
+                    required: true
 
-        opt_referrals:
-          type: toggle
-          label: Follow Referrals
-          help: Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers)
-          default: 0
-          highlight: 0
-          options:
-              1: PLUGIN_ADMIN.YES
-              0: PLUGIN_ADMIN.NO
-          validate:
-              type: bool
+                version:
+                  type: number
+                  label: PLUGIN_LOGIN_LDAP.VERSION
+                  default: 3
+                  size: x-small
+                  help: PLUGIN_LOGIN_LDAP.VERSION_DESC
+                  validate:
+                    required: true
 
-    config_section:
-      type: section
-      title: LDAP Configuration
+                ssl:
+                  type: toggle
+                  label: Use SSL
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-      fields:
+                start_tls:
+                  type: toggle
+                  label: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS
+                  help: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS_DESC
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-        user_dn:
-          type: text
-          label: User Search DN
-          placeholder: uid=[username],dc=company,dc=com
-          help: String used to authenticate a user, where [username] is directly replaced by user value entered via login
-          validate:
-            required: true
+                opt_referrals:
+                  type: toggle
+                  label: PLUGIN_LOGIN_LDAP.OPT_REFERRALS
+                  help: PLUGIN_LOGIN_LDAP.OPT_REFERRALS_DESC
+                  default: 0
+                  highlight: 0
+                  options:
+                      1: PLUGIN_ADMIN.YES
+                      0: PLUGIN_ADMIN.NO
+                  validate:
+                      type: bool
 
-        data_dn:
-          type: text
-          label: User Data DN
-          placeholder: dc=company,dc=com
-          help: String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file
+            config_section:
+              type: section
+              title: LDAP Configuration
+              underline: true
 
-        map_username:
-          type: text
-          label: Username Mapping
-          help: LDAP Attribute(s) that contains the user's username
-          placeholder: uid
-          validate:
-            required: true
+              fields:
 
-        map_fullname:
-          type: text
-          label: User Fullname Mapping
-          help: LDAP Attribute(s) that contains the user's full name
-          placeholder: givenName lastName
-          validate:
-            required: true
+                user_dn:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.USER_DN
+                  size: large
+                  placeholder: uid=[username],dc=company,dc=com
+                  help: PLUGIN_LOGIN_LDAP.USER_DN_DESC
+                  validate:
+                    required: true
 
-        map_email:
-           type: text
-           label: User Email Mapping
-           help: LDAP Attribute that contains the user's email
-           placeholder: mail
-           validate:
-             required: true
+                search_dn:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.USER_SEARCH_DN
+                  size: large
+                  placeholder: ou=users,dc=company,dc=com
+                  help: PLUGIN_LOGIN_LDAP.USER_SEARCH_DN_DESC
+
+                group_dn:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.GROUP_SEARCH_DN
+                  size: large
+                  placeholder: ou=groups,dc=company,dc=com
+                  help: PLUGIN_LOGIN_LDAP.GROUP_SEARCH_DN_DESC
+
+                group_query:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.GROUP_QUERY
+                  size: large
+                  placeholder: '(&(cn=*)(memberUid=[username]))'
+                  help: PLUGIN_LOGIN_LDAP.GROUP_QUERY_DESC
+
+                group_indentifier:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.GROUP_IDENTIFIER
+                  size: large
+                  placeholder: 'cn'
+                  help: PLUGIN_LOGIN_LDAP.GROUP_IDENTIFIER_DESC
+
+                map_username:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.USERNAME_MAPPING
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.USERNAME_MAPPING_DESC
+                  placeholder: uid
+
+                map_fullname:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.FULLNAME_MAPPING
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.FULLNAME_MAPPING
+                  placeholder: givenName lastName
+
+                map_email:
+                   type: text
+                   label: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING
+                   size: large
+                   help: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING_DESC
+                   placeholder: mail
+
+        tab_2:
+          type: tab
+          title: PLUGIN_LOGIN_LDAP.ADVANCED
+          fields:
+
+            save_grav_user:
+              type: toggle
+              label: PLUGIN_LOGIN_LDAP.SAVE_GRAV_USER
+              help: PLUGIN_LOGIN_LDAP.SAVE_GRAV_USER_DESC
+              highlight: 0
+              default: 0
+              options:
+                1: Enabled
+                0: Disabled
+              validate:
+                type: bool
+
+            store_ldap_data:
+              type: toggle
+              label: PLUGIN_LOGIN_LDAP.STORE_LDAP_USER
+              help: PLUGIN_LOGIN_LDAP.STORE_LDAP_USER_DESC
+              highlight: 0
+              default: 0
+              options:
+                1: Enabled
+                0: Disabled
+              validate:
+                type: bool
+
+            default_access_levels.groups:
+              type: selectize
+              size: large
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_ACCESS_LEVELS_GROUPS
+              '@data-options': '\Grav\User\Groups::groups'
+              classes: fancy
+              validate:
+                type: commalist
+
+            blacklist_ldap_fields:
+              type: array
+              type: array
+              value_only: true
+              label: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS
+              help: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS_HELP
+              placeholder_key: key
+              placeholder_value: PLUGIN_LOGIN_LDAP.BLACKLIST_FIELDS_PLACEHOLDER
+
+            default_access_levels.access.site:
+              type: array
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_ACCESS_LEVELS_SITE
+              multiple: false
+              placeholder_key: login
+              placeholder_value: 'true'
+              validate:
+                type: array
+                required: true
+
+            default_access_levels.access.groups:
+              classes: frontmatter
+              type: editor
+              label: PLUGIN_LOGIN_LDAP.DEFAULT_GROUPS_ACCESS_LEVELS
+              autofocus: true
+              markdown: true
+              description: PLUGIN_LOGIN_LDAP.ACCESS_GROUPS_DESC
+              default: "admin:\r\n    admin:\r\n      login: true\r\n      super: true\r\n    site:\r\n      login: true\r\nuser:\r\n  site:\r\n    login: true"
+              codemirror:
+                mode: 'yaml'
+                indentUnit: 2
+                autofocus: true
+                indentWithTabs: false
+                lineNumbers: true
+                styleActiveLine: true
+                gutters: ['CodeMirror-lint-markers']
+                lint: true
+
+
+
+        tab_3:
+          type: tab
+          title: PLUGIN_LOGIN_LDAP.INSTRUCTIONS
+          fields:
+
+            ldap_instructions:
+              type: display
+              markdown: true
+              style: vertical
+              file: 'plugins://login-ldap/README.md'
