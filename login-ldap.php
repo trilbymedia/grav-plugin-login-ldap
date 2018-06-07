@@ -117,6 +117,7 @@ class LoginLDAPPlugin extends Plugin
             $map_username = $this->config->get('plugins.login-ldap.map_username');
             $map_fullname = $this->config->get('plugins.login-ldap.map_fullname');
             $map_email    = $this->config->get('plugins.login-ldap.map_email');
+            $map_dn    = $this->config->get('plugins.login-ldap.map_dn');
 
             // Try to login via LDAP
             $ldap->bind($username, $credentials['password']);
@@ -148,6 +149,7 @@ class LoginLDAPPlugin extends Plugin
                 $userdata['login'] = $this->getLDAPMappedItem($map_username, $ldap_data);
                 $userdata['fullname'] = $this->getLDAPMappedItem($map_fullname, $ldap_data);
                 $userdata['email'] = $this->getLDAPMappedItem($map_email, $ldap_data);
+                $userdata['dn'] = $this->getLDAPMappedItem($map_dn, $ldap_data);
                 $userdata['provider'] = 'ldap';
 
                 // Get LDAP Data if required
@@ -169,6 +171,7 @@ class LoginLDAPPlugin extends Plugin
                 if ($group_dn) {
                     // retrieves all extra groups for user
                     $group_query = str_replace('[username]', $credentials['username'], $group_query);
+                    $group_query = str_replace('[dn]', $userdata['dn'], $group_query);
                     $query = $ldap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
 

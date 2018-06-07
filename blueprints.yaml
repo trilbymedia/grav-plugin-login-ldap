@@ -173,6 +173,13 @@ form:
                    help: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING_DESC
                    placeholder: mail
 
+                map_dn:
+                   type: text
+                   label: PLUGIN_LOGIN_LDAP.DN_MAPPING
+                   size: large
+                   help: PLUGIN_LOGIN_LDAP.DN_MAPPING_DESC
+                   placeholder: distinguishedName
+
         tab_2:
           type: tab
           title: PLUGIN_LOGIN_LDAP.ADVANCED
