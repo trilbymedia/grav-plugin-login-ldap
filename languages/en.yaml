@@ -8,7 +8,7 @@ PLUGIN_LOGIN_LDAP:
   GROUP_SEARCH_DN: 'Group Search DN'
   GROUP_SEARCH_DN_DESC: 'String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file'
   GROUP_QUERY: 'Group Query'
-  GROUP_QUERY_DESC: 'The query used to search Groups. Only change this if you know what you are doing [dn] will be replaced with the distinguished name attribute and [username] will be replaced with the username entered via login'
+  GROUP_QUERY_DESC: 'The query used to search Groups. Only change this if you know what you are doing. [dn] will be replaced with the distinguished name attribute and [username] will be replaced with the username entered via login'
   GROUP_IDENTIFIER: 'Group Identifier'
   GROUP_IDENTIFIER_DESC: 'The Group identifier that will come back in the response, this is directly related to group query.'
   HOST: 'Host'
