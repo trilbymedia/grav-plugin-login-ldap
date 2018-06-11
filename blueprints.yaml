@@ -1,5 +1,5 @@
 name: Login LDAP
-version: 1.0.0
+version: 1.0.1
 description: Allows for Grav user authentication against an LDAP Server such as OpenLDAP or ActiveDirectory
 icon: user-circle-o
 author:
