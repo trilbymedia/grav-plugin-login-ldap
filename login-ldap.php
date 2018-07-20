@@ -69,6 +69,7 @@ class LoginLDAPPlugin extends Plugin
     public function userLoginAuthenticate(UserLoginEvent $event)
     {
         $credentials = $event->getCredentials();
+        $username = $credentials['username'];
 
         // Get Proper username
         $user_dn            = $this->config->get('plugins.login-ldap.user_dn');
@@ -77,7 +78,7 @@ class LoginLDAPPlugin extends Plugin
         $group_query        = $this->config->get('plugins.login-ldap.group_query');
         $group_identifier   = $this->config->get('plugins.login-ldap.group_identifier');
 
-        $username   = str_replace('[username]', $credentials['username'], $user_dn);
+        $username_dn   = str_replace('[username]', $username, $user_dn);
 
         // Get Host info
         $connection         = $this->config->get('plugins.login-ldap.connection');
@@ -115,40 +116,40 @@ class LoginLDAPPlugin extends Plugin
             $map_username = $this->config->get('plugins.login-ldap.map_username');
             $map_fullname = $this->config->get('plugins.login-ldap.map_fullname');
             $map_email    = $this->config->get('plugins.login-ldap.map_email');
-            $map_dn    = $this->config->get('plugins.login-ldap.map_dn');
+            $map_dn       = $this->config->get('plugins.login-ldap.map_dn');
 
             // Try to login via LDAP
-            $ldap->bind($username, $credentials['password']);
+            $ldap->bind($username_dn, $credentials['password']);
 
             // Create Grav User
             $grav_user = User::load(strtolower($username));
 
             // Set defaults with only thing we know... username provided
-            $grav_user['login'] = $credentials['username'];
-            $grav_user['fullname'] = $credentials['username'];
+            $grav_user['login'] = $username;
+            $grav_user['fullname'] = $username;
             $user_groups = [];
 
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
-                $query_string = $map_username .'='. $credentials['username'];
+                $query_string = $map_username .'='. $username;
                 $query = $ldap->query($search_dn, $query_string);
                 $results = $query->execute()->toArray();
 
                 // Get LDAP Data
+                $ldap_data = [];
                 if (empty($results)) {
                     $this->grav['log']->error('plugin.login-ldap: [401] user search for "' . $query_string . '" returned no user data');
-                    $ldap_data =[];
                 } else {
                     $ldap_data = array_shift($results)->getAttributes();
                 }
 
-                $userdata = [];
-
-                $userdata['login'] = $this->getLDAPMappedItem($map_username, $ldap_data);
-                $userdata['fullname'] = $this->getLDAPMappedItem($map_fullname, $ldap_data);
-                $userdata['email'] = $this->getLDAPMappedItem($map_email, $ldap_data);
-                $userdata['dn'] = $this->getLDAPMappedItem($map_dn, $ldap_data);
-                $userdata['provider'] = 'ldap';
+                $userdata = array(
+                    'login' => $this->getLDAPMappedItem($map_username, $ldap_data),
+                    'fullname' => $this->getLDAPMappedItem($map_fullname, $ldap_data),
+                    'email' => $this->getLDAPMappedItem($map_email, $ldap_data),
+                    'dn' => $this->getLDAPMappedItem($map_dn, $ldap_data),
+                    'provider' => 'ldap'
+                );
 
                 // Get LDAP Data if required
                 if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
@@ -168,7 +169,7 @@ class LoginLDAPPlugin extends Plugin
                 // Get Groups if group_dn if set
                 if ($group_dn) {
                     // retrieves all extra groups for user
-                    $group_query = str_replace('[username]', $credentials['username'], $group_query);
+                    $group_query = str_replace('[username]', $username, $group_query);
                     $group_query = str_replace('[dn]', $userdata['dn'], $group_query);
                     $query = $ldap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
@@ -240,7 +241,7 @@ class LoginLDAPPlugin extends Plugin
         } catch (ConnectionException $e) {
             $message = $e->getMessage();
 
-            $this->grav['log']->error('plugin.login-ldap: ['. $e->getCode() . '] ' . $username . ' - ' . $message);
+            $this->grav['log']->error('plugin.login-ldap: ['. $e->getCode() . '] ' . $username_dn . ' - ' . $message);
 
             // Just return so other authenticators can take a shot...
             if ($message === 'Invalid credentials') {

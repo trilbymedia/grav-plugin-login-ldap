@@ -129,11 +129,11 @@ The default configuration for `default_access_levels.access.groups` looks like:
 
 ```yaml
 admin:
-    admin:
-        login: true
-      super: true
-    site:
-      login: true
+  admin:
+    login: true
+    super: true
+  site:
+    login: true
 user:
   site:
     login: true
