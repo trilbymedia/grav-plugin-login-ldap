@@ -38,8 +38,7 @@ The default configuration and an explanation of available options:
 enabled: true
 connection: 'ldapi://'
 version: 3
-ssl: false
-start_tls: false
+encryption: 'none'
 opt_referrals: false
 user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
@@ -74,8 +73,7 @@ default_access_levels:
 |enabled|Enables the plugin | [default: `true`] \| `false`|
 |connection|The URI to connect to your LDAP server | e.g. `ldap://ldap.yourcompany.com:389` |
 |version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: `3`]  |
-|ssl|Enable SSL for the connection (typically for port 636 or 3269) | `true` \| [default: `false`] |
-|start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | `true` \| [default: `false`] |
+|encryption|The Encryption Protocol used to connect to the LDAP server (`none`, `ssl`, `tls`) | [default: `none`]  |
 |opt_referrals|Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers) | `true` \| [default: `false`] |
 
 ### LDAP Configuration

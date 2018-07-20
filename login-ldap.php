@@ -78,27 +78,17 @@ class LoginLDAPPlugin extends Plugin
         $group_query        = $this->config->get('plugins.login-ldap.group_query');
         $group_identifier   = $this->config->get('plugins.login-ldap.group_identifier');
 
-        $username_dn   = str_replace('[username]', $username, $user_dn);
+        $username_dn        = str_replace('[username]', $username, $user_dn);
 
         // Get Host info
         $connection         = $this->config->get('plugins.login-ldap.connection');
         $version            = $this->config->get('plugins.login-ldap.version');
-        $ssl                = $this->config->get('plugins.login-ldap.ssl');
-        $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
+        $encryption         = $this->plugin->get('plugins.login-ldap.encryption', 'none');
         $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
         $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
 
         if (is_null($connection)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
-        }
-
-        // Set Encryption
-        if ((bool) $ssl) {
-            $encryption = 'ssl';
-        } elseif ((bool) $start_tls) {
-            $encryption = 'tls';
-        } else {
-            $encryption = 'none';
         }
 
         try {
@@ -197,7 +187,7 @@ class LoginLDAPPlugin extends Plugin
             $current_groups = $grav_user->get('groups');
             if (!$current_groups) {
                 $groups = $this->config->get('plugins.login-ldap.default_access_levels.groups', []);
-                if (count($groups) > 0) {
+                if (count($groups) !== 0) {
                     $data['groups'] = $groups;
                     $grav_user->merge($data);
                 }
@@ -208,15 +198,15 @@ class LoginLDAPPlugin extends Plugin
             $access = $this->config->get('plugins.login-ldap.default_access_levels.access.site');
 
             if (!$current_access && $access) {
-                if (count($access) > 0) {
+                if (count($access) !== 0) {
                     $data['access']['site'] = $access;
                     $grav_user->merge($data);
                 }
             }
 
             // Give Admin Access
-            $admin_access = $this->config->get('plugins.login-ldap.default_access_levels.access.groups');
-            if ($admin_access && count($user_groups) && strlen($admin_access) > 0) {
+            $admin_access = $this->config->get('plugins.login-ldap.default_access_levels.access.groups', '');
+            if (count($user_groups) !== 0 && $admin_access !== '') {
                 $groups_access = Yaml::parse($admin_access);
                 foreach ($groups_access as $key => $group_access) {
                     if (in_array($key, $user_groups)) {

@@ -1,8 +1,7 @@
 enabled: true
 connection: 'ldapi://'
 version: 3
-ssl: false
-start_tls: false
+encryption: 'none'
 opt_referrals: false
 user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:

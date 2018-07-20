@@ -64,28 +64,14 @@ form:
                   validate:
                     required: true
 
-                ssl:
-                  type: toggle
-                  label: Use SSL
-                  default: 0
-                  highlight: 0
+                encryption:
+                  type: select
+                  label: PLUGIN_LOGIN_LDAP.ENCRYPTION
+                  help: PLUGIN_LOGIN_LDAP.ENCRYPTION_DESC
                   options:
-                      1: PLUGIN_ADMIN.YES
-                      0: PLUGIN_ADMIN.NO
-                  validate:
-                      type: bool
-
-                start_tls:
-                  type: toggle
-                  label: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS
-                  help: PLUGIN_LOGIN_LDAP.NEGOTIATE_TLS_DESC
-                  default: 0
-                  highlight: 0
-                  options:
-                      1: PLUGIN_ADMIN.YES
-                      0: PLUGIN_ADMIN.NO
-                  validate:
-                      type: bool
+                    none: PLUGIN_LOGIN_LDAP.ENCRYPTION_METHODS.NONE
+                    ssl: PLUGIN_LOGIN_LDAP.ENCRYPTION_METHODS.SSL
+                    tls: PLUGIN_LOGIN_LDAP.ENCRYPTION_METHODS.TLS
 
                 opt_referrals:
                   type: toggle
@@ -94,10 +80,10 @@ form:
                   default: 0
                   highlight: 0
                   options:
-                      1: PLUGIN_ADMIN.YES
-                      0: PLUGIN_ADMIN.NO
+                    1: PLUGIN_ADMIN.YES
+                    0: PLUGIN_ADMIN.NO
                   validate:
-                      type: bool
+                    type: bool
 
             config_section:
               type: section
@@ -158,18 +144,18 @@ form:
                   placeholder: givenName lastName
 
                 map_email:
-                   type: text
-                   label: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING
-                   size: large
-                   help: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING_DESC
-                   placeholder: mail
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.EMAIL_MAPPING_DESC
+                  placeholder: mail
 
                 map_dn:
-                   type: text
-                   label: PLUGIN_LOGIN_LDAP.DN_MAPPING
-                   size: large
-                   help: PLUGIN_LOGIN_LDAP.DN_MAPPING_DESC
-                   placeholder: distinguishedName
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.DN_MAPPING
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.DN_MAPPING_DESC
+                  placeholder: distinguishedName
 
         tab_2:
           type: tab
