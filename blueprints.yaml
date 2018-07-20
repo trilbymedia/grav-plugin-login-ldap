@@ -46,21 +46,12 @@ form:
 
               fields:
 
-                host:
+                connection:
                   type: text
-                  label: PLUGIN_LOGIN_LDAP.HOST
+                  label: PLUGIN_LOGIN_LDAP.CONNECTION
                   size: large
-                  help: PLUGIN_LOGIN_LDAP.HOST_DESC
-                  placeholder: ldap.yourcompany.com
-                  validate:
-                    required: true
-
-                port:
-                  type: number
-                  label: PLUGIN_LOGIN_LDAP.PORT
-                  default: 389
-                  size: x-small
-                  help: PLUGIN_LOGIN_LDAP.PORT_DESC
+                  help: PLUGIN_LOGIN_LDAP.CONNECTION_DESC
+                  placeholder: 'ldap://ldap.yourcompany.com:389'
                   validate:
                     required: true
 
@@ -145,7 +136,7 @@ form:
                   placeholder: '(&(cn=*)(memberUid=[username]))'
                   help: PLUGIN_LOGIN_LDAP.GROUP_QUERY_DESC
 
-                group_indentifier:
+                group_identifier:
                   type: text
                   label: PLUGIN_LOGIN_LDAP.GROUP_IDENTIFIER
                   size: large

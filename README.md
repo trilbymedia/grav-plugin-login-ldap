@@ -36,8 +36,7 @@ The default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
-host:
-port: 389
+connection: 'ldapi://'
 version: 3
 ssl: false
 start_tls: false
@@ -46,7 +45,7 @@ user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
 group_dn:
 group_query: '(&(cn=*)(memberUid=[username]))'
-group_indentifier: cn
+group_identifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
@@ -73,8 +72,7 @@ default_access_levels:
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
 |enabled|Enables the plugin | [default: `true`] \| `false`|
-|host|The DNS name or IP address of your LDAP server | e.g. `ldap.yourcompany.com` |
-|port|The TCP port of the host that the LDAP server runs under |  [default: `389`]|
+|connection|The URI to connect to your LDAP server | e.g. `ldap://ldap.yourcompany.com:389` |
 |version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: `3`]  |
 |ssl|Enable SSL for the connection (typically for port 636 or 3269) | `true` \| [default: `false`] |
 |start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | `true` \| [default: `false`] |
@@ -88,7 +86,7 @@ default_access_levels:
 |search_dn|DN String used to retrieve user data. If not provided, extra LDAP user data will not be stored in Grav user account file [OPTIONAL]| e.g. `ou=users,dc=company,dc=com` |
 |group_dn|DN String used to retrieve user group data. If not provided, extra LDAP group data will not be stored in Grav user account file [OPTIONAL] | e.g. `ou=groups,dc=company,dc=com` |
 |group_query|The query used to search Groups. Only change this if you know what you are doing| [default: `(&(cn=*)(memberUid=[username]))`] |
-|group_indentifier|The Group identifier that will come back in the response, this is directly related to group query.| [default: `cn`] |
+|group_identifier|The Group identifier that will come back in the response, this is directly related to group query.| [default: `cn`] |
 |map_username|LDAP Attribute(s) that contains the user's username | [default: `uid`] |
 |map_fullname|LDAP Attribute(s) that contains the user's full name | [default: `givenName lastName`] |
 |map_email|LDAP Attribute(s) that contains the user's email address | [default: `mail`] |

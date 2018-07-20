@@ -75,20 +75,19 @@ class LoginLDAPPlugin extends Plugin
         $search_dn          = $this->config->get('plugins.login-ldap.search_dn');
         $group_dn           = $this->config->get('plugins.login-ldap.group_dn');
         $group_query        = $this->config->get('plugins.login-ldap.group_query');
-        $group_indentifier  = $this->config->get('plugins.login-ldap.group_indentifier');
+        $group_identifier   = $this->config->get('plugins.login-ldap.group_identifier');
 
         $username   = str_replace('[username]', $credentials['username'], $user_dn);
 
         // Get Host info
-        $host               = $this->config->get('plugins.login-ldap.host');
-        $port               = $this->config->get('plugins.login-ldap.port');
+        $connection         = $this->config->get('plugins.login-ldap.connection');
         $version            = $this->config->get('plugins.login-ldap.version');
         $ssl                = $this->config->get('plugins.login-ldap.ssl');
         $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
         $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
         $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
 
-        if (is_null($host)) {
+        if (is_null($connection)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
         }
 
@@ -104,8 +103,7 @@ class LoginLDAPPlugin extends Plugin
         try {
             /** @var Ldap $ldap */
             $ldap = Ldap::create('ext_ldap', array(
-                'host' => $host,
-                'port' => $port,
+                'connection_string' => $connection,
                 'encryption' => $encryption,
                 'options' => array(
                     'protocol_version' => $version,
@@ -154,7 +152,7 @@ class LoginLDAPPlugin extends Plugin
 
                 // Get LDAP Data if required
                 if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
-                    foreach($ldap_data as $key => $data) {
+                    foreach ($ldap_data as $key => $data) {
                         $userdata['ldap'][$key] = array_shift($data);
                     }
                     unset($userdata['ldap']['userPassword']);
@@ -181,7 +179,7 @@ class LoginLDAPPlugin extends Plugin
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
-                        $user_group = array_shift($attributes[$group_indentifier]);
+                        $user_group = array_shift($attributes[$group_identifier]);
                         $user_groups[] = $user_group;
 
                         if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
@@ -245,7 +243,7 @@ class LoginLDAPPlugin extends Plugin
             $this->grav['log']->error('plugin.login-ldap: ['. $e->getCode() . '] ' . $username . ' - ' . $message);
 
             // Just return so other authenticators can take a shot...
-            if ($message = "Invalid credentials") {
+            if ($message === 'Invalid credentials') {
                 return;
             }
 
@@ -276,9 +274,9 @@ class LoginLDAPPlugin extends Plugin
     {
         $item_bits = [];
         $map_bits = explode(' ', $map);
-        foreach($map_bits as $bit) {
-            if(isset($ldap_data[$bit])) {
-            $item_bits[] = array_shift($ldap_data[$bit]);
+        foreach ($map_bits as $bit) {
+            if (isset($ldap_data[$bit])) {
+                $item_bits[] = array_shift($ldap_data[$bit]);
             }
         }
         $item = implode(' ', $item_bits);
