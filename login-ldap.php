@@ -172,18 +172,22 @@ class LoginLDAPPlugin extends Plugin
                     // retrieves all extra groups for user
                     $group_query = str_replace('[username]', $credentials['username'], $group_query);
                     $group_query = str_replace('[dn]', $userdata['dn'], $group_query);
+
                     $query = $ldap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
 
                     // retrieve current primary group for user
                     $query = $ldap->query($group_dn, 'gidnumber=' . $this->getLDAPMappedItem('gidNumber', $ldap_data));
+
                     $groups = array_merge($groups, $query->execute()->toArray());
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
-                        $user_group = array_shift($attributes[$group_indentifier]);
-                        $user_groups[] = $user_group;
-
+                        foreach ($attributes[$group_indentifier] as $one_group){
+                            $this->grav['log']->debug('One group : ' . serialize($one_group));
+                            $user_group = array_shift($attributes[$group_indentifier]);
+                            $user_groups[] = $user_group;
+                        }
                         if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
                             $userdata['ldap']['groups'][] = $user_group;
                         }
