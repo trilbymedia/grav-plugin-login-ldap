@@ -1,15 +1,13 @@
 enabled: true
-host:
-port: 389
+connection: 'ldapi://'
 version: 3
-ssl: false
-start_tls: false
+encryption: 'none'
 opt_referrals: false
 user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
 group_dn:
 group_query: '(&(cn=*)(memberUid=[username]))'
-group_indentifier: cn
+group_identifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
