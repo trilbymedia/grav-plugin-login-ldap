@@ -170,11 +170,16 @@ class LoginLDAPPlugin extends Plugin
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
-                        $user_group = array_shift($attributes[$group_identifier]);
-                        $user_groups[] = $user_group;
 
-                        if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
-                            $userdata['ldap']['groups'][] = $user_group;
+                        // make sure we have an array to read
+                        if ( !empty($attributes) && !empty($attributes[$group_indentifier]) && is_array($attributes[$group_indentifier]) )
+                        {
+                            $user_group = array_shift($attributes[$group_indentifier]);
+                            $user_groups[] = $user_group;
+
+                            if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
+                                $userdata['ldap']['groups'][] = $user_group;
+                            }
                         }
                     }
                 }
