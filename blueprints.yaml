@@ -209,6 +209,32 @@ form:
               validate:
                 type: bool
 
+            alter_search_enable:
+              type: toggle
+              label: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_ENABLE
+              default: 0
+              highlight: 0
+              help: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_ENABLE_DESC
+              options:
+                1: Enabled
+                0: Disabled
+              validate:
+                type: bool
+
+            alter_search_user_dn:
+              type: text
+              label: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_USER_DN
+              size: large
+              placeholder: cn=admin,dc=company,dc=com
+              help: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_USER_DN_DESC
+
+            alter_search_user_password:
+              type: text
+              label: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_USER_PASSWORD
+              size: large
+              placeholder: password
+              help: PLUGIN_LOGIN_LDAP.ALTER_SERARCH_USER_PASSWORD_DESC
+
             default_access_levels.groups:
               type: selectize
               size: large
