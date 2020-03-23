@@ -69,6 +69,12 @@ class LoginLDAPPlugin extends Plugin
     public function userLoginAuthenticate(UserLoginEvent $event)
     {
         $credentials = $event->getCredentials();
+        
+        // empty username -> ignore
+        if($credentials['username'] == ''){
+            $event->setStatus($event::AUTHENTICATION_FAILURE);
+            return;
+        }
 
         // Get Proper username
         $user_dn            = $this->config->get('plugins.login-ldap.user_dn');
