@@ -52,6 +52,9 @@ map_fullname: givenName lastName
 map_email: mail
 save_grav_user: false
 store_ldap_data: false
+alter_search_enable: false
+alter_search_user_dn:
+alter_search_user_password:
 default_access_levels:
   groups: 
    - ldap_users
@@ -99,6 +102,9 @@ default_access_levels:
 |:---------------------|:---------------------------|:-------|
 |save_grav_user|Store the grav user account as a local YAML account | true \| [default: `false`] |
 |store_ldap_data|If storing a local Grav user, you can also store LDAP data so its available in Grav| true \| [default: `false`] |
+|alter_search_enable|If a normal LDAP user don't have permission to do search in the server, you can use a alter admin user to do the search for extra info |true \| [default: `false`] |
+|alter_search_user_dn|Alter admin user dn | e.g. `cn=admin,dc=company,dc=com` |
+|alter_search_user_password|Alter admin user password | e.g. `password` |
 |default_access_levels.groups|Set a default group for all users logging in via LDAP [OPTIONAL] | e.g. `ldap_users` |
 |default_access_levels.access.site|Set the default **site access** for all users logging in via LDAP (used if no `access.groups` mapping applies) | e.g. `[login: 'true']` |
 |default_access_levels.access.groups|The default **access to assign** to users logging in based on **LDAP group membership**| e.g. `user: [site: [login: 'true']]` |
