@@ -7,6 +7,7 @@ use Grav\Common\Utils;
 use Grav\Plugin\Login\Events\UserLoginEvent;
 use Grav\Plugin\Login\Login;
 use Symfony\Component\Ldap\Ldap;
+use Symfony\Component\Ldap\LdapInterface;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -177,7 +178,7 @@ class LoginLDAPPlugin extends Plugin
                 if ($group_dn) {
                     // retrieves all extra groups for user
                     $group_query = str_replace('[username]', $credentials['username'], $group_query);
-                    $group_query = str_replace('[dn]', $userdata['dn'], $group_query);
+                    $group_query = str_replace('[dn]', $ldap->escape($userdata['dn'], '', LdapInterface::ESCAPE_FILTER), $group_query);
                     $query = $ldap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
 
