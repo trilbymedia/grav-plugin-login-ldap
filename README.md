@@ -97,7 +97,7 @@ default_access_levels:
 
 ### Examples
 
-#### Active Directory with pre-Windows 2000 style login
+#### Active Directory with pre-Windows 2000 style logins
 
 |Key                   | Value |
 |:---------------------|:-------|
