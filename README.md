@@ -50,6 +50,7 @@ group_indentifier: cn
 map_username: uid
 map_fullname: givenName lastName
 map_email: mail
+map_dn: distinguishedName
 save_grav_user: false
 store_ldap_data: false
 default_access_levels:
@@ -78,7 +79,7 @@ default_access_levels:
 |version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: `3`]  |
 |ssl|Enable SSL for the connection (typically for port 636 or 3269) | `true` \| [default: `false`] |
 |start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | `true` \| [default: `false`] |
-|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (Set to "off" for Windows 2003 servers) | `true` \| [default: `false`] |
+|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (turn it off for Windows 2003 and later servers) | `true` \| [default: `false`] |
 
 ### LDAP Configuration
 
@@ -92,6 +93,23 @@ default_access_levels:
 |map_username|LDAP Attribute(s) that contains the user's username | [default: `uid`] |
 |map_fullname|LDAP Attribute(s) that contains the user's full name | [default: `givenName lastName`] |
 |map_email|LDAP Attribute(s) that contains the user's email address | [default: `mail`] |
+|map_dn|LDAP Attribute that contains the user's DN String | [default: `distinguishedName`] |
+
+### Examples
+
+#### Active Directory with pre-Windows 2000 style login
+
+|Key                   | Value |
+|:---------------------|:-------|
+|user_dn| `YOURDOMAIN\[username]` |
+|search_dn| `ou=users,dc=yourdomain,dc=local` |
+|group_dn| `ou=groups,dc=yourdomain,dc=local` |
+|group_query| `(&(cn=*)(member=[dn]))` or `(&(cn=*)(member:1.2.840.113556.1.4.1941:=[dn]))` for nested group support |
+|group_indentifier| `cn` |
+|map_username| `sAMAccountName` |
+|map_fullname| `displayName` |
+|map_email| `mail` |
+|map_dn| `distinguishedName` |
 
 ### Advanced Configuration
 
