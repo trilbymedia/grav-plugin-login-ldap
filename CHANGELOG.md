@@ -1,3 +1,11 @@
+# v1.0.2
+## 11/16/2020
+
+1. [](#improved)
+    * Allow to login if LDAP user's DN contains double quotes [#18](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/18)
+    * Ignore authentication requests with empty username [#14](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/14)
+    * Better handling a null condition with `array_shift` [#8](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/8)
+
 # v1.0.1
 ## 06/11/2018
 

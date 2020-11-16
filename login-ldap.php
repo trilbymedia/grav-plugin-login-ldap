@@ -7,6 +7,7 @@ use Grav\Common\Utils;
 use Grav\Plugin\Login\Events\UserLoginEvent;
 use Grav\Plugin\Login\Login;
 use Symfony\Component\Ldap\Ldap;
+use Symfony\Component\Ldap\LdapInterface;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -69,6 +70,12 @@ class LoginLDAPPlugin extends Plugin
     public function userLoginAuthenticate(UserLoginEvent $event)
     {
         $credentials = $event->getCredentials();
+        
+        // empty username -> ignore
+        if($credentials['username'] == ''){
+            $event->setStatus($event::AUTHENTICATION_FAILURE);
+            return;
+        }
 
         // Get Proper username
         $user_dn            = $this->config->get('plugins.login-ldap.user_dn');
@@ -171,7 +178,7 @@ class LoginLDAPPlugin extends Plugin
                 if ($group_dn) {
                     // retrieves all extra groups for user
                     $group_query = str_replace('[username]', $credentials['username'], $group_query);
-                    $group_query = str_replace('[dn]', $userdata['dn'], $group_query);
+                    $group_query = str_replace('[dn]', $ldap->escape($userdata['dn'], '', LdapInterface::ESCAPE_FILTER), $group_query);
                     $query = $ldap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
 
@@ -181,11 +188,16 @@ class LoginLDAPPlugin extends Plugin
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
-                        $user_group = array_shift($attributes[$group_indentifier]);
-                        $user_groups[] = $user_group;
+                        
+                        // make sure we have an array to read
+                        if ( !empty($attributes) && !empty($attributes[$group_indentifier]) && is_array($attributes[$group_indentifier]) )
+                        {
+                            $user_group = array_shift($attributes[$group_indentifier]);
+                            $user_groups[] = $user_group;
 
-                        if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
-                            $userdata['ldap']['groups'][] = $user_group;
+                            if ($this->config->get('plugins.login-ldap.store_ldap_data', false)) {
+                                $userdata['ldap']['groups'][] = $user_group;
+                            }
                         }
                     }
                 }
