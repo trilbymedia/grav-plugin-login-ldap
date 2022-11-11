@@ -87,6 +87,7 @@ form:
                 ignore_ssl_errors:
                   type: toggle
                   label: Ignore SSL Errors
+                  help: Ignore errors from self-signed certificates.
                   default: false
                   highlight: 0
                   options:
