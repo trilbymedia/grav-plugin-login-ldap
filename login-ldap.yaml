@@ -3,6 +3,7 @@ host:
 port: 389
 version: 3
 ssl: false
+ignore_ssl_errors: false
 start_tls: false
 opt_referrals: false
 user_dn: 'uid=[username],dc=company,dc=com'

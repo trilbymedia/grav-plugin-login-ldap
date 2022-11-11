@@ -94,6 +94,7 @@ class LoginLDAPPlugin extends Plugin
         $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
         $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
         $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
+        $ignore_ssl_error   = $this->config->get('plugins.login-ldap.ignore_ssl_errors');
 
         if (is_null($host)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
@@ -106,6 +107,10 @@ class LoginLDAPPlugin extends Plugin
             $encryption = 'tls';
         } else {
             $encryption = 'none';
+        }
+
+        if ($ignore_ssl_error) {
+            putenv('LDAPTLS_REQCERT=never');
         }
 
         try {
