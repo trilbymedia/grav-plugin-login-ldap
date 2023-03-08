@@ -79,7 +79,7 @@ default_access_levels:
 |version|LDAP Version 3 is most popular (only change this if you know what you are doing) | [default: `3`]  |
 |ssl|Enable SSL for the connection (typically for port 636 or 3269) | `true` \| [default: `false`] |
 |start_tls|Negotiate TLS encryption with the LDAP server (requires all traffic to be encrypted) | `true` \| [default: `false`] |
-|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (turn it off for Windows 2003 and later servers) | `true` \| [default: `false`] |
+|opt_referrals|Sets the value of LDAP_OPT_REFERRALS (leave it disabled for Windows 2003 and later servers) | `true` \| [default: `false`] |
 
 ### LDAP Configuration
 
