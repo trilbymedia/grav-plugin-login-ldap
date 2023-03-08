@@ -70,10 +70,11 @@ class LoginLDAPPlugin extends Plugin
     public function userLoginAuthenticate(UserLoginEvent $event)
     {
         $credentials = $event->getCredentials();
-        
-        // empty username -> ignore
+
+        // Fail early on empty username
         if($credentials['username'] == ''){
             $event->setStatus($event::AUTHENTICATION_FAILURE);
+            $event->stopPropagation();
             return;
         }
 
