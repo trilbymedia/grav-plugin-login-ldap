@@ -108,6 +108,38 @@ form:
                   validate:
                       type: bool
 
+            search_bind_section:
+              type: section
+              title: PLUGIN_LOGIN_LDAP.SEARCH_BIND_CONFIGURATION
+              underline: true
+
+              fields:
+
+                search_bind_enabled:
+                  type: toggle
+                  label: PLUGIN_LOGIN_LDAP.SEARCH_BIND_ENABLE
+                  help: PLUGIN_LOGIN_LDAP.SEARCH_BIND_ENABLE_DESC
+                  default: 0
+                  highlight: 0
+                  options:
+                    1: Enabled
+                    0: Disabled
+                  validate:
+                    type: bool
+
+                search_bind_dn:
+                  type: text
+                  label: PLUGIN_LOGIN_LDAP.SEARCH_BIND_DN
+                  size: large
+                  placeholder: cn=readonly,dc=company,dc=com
+                  help: PLUGIN_LOGIN_LDAP.SEARCH_BIND_DN_DESC
+
+                search_bind_password:
+                  type: password
+                  label: PLUGIN_LOGIN_LDAP.SEARCH_BIND_PASSWORD
+                  size: large
+                  help: PLUGIN_LOGIN_LDAP.SEARCH_BIND_PASSWORD_DESC
+
             config_section:
               type: section
               title: LDAP Configuration
