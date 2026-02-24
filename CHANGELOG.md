@@ -1,3 +1,14 @@
+# v1.2.0
+## 02/24/2026
+
+1. [](#new)
+    * Added search bind support for LDAP environments with restrictive ACLs [#36](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/36)
+1. [](#bugfix)
+    * Fixed `User::load()` using full DN instead of username [#35](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/35)
+    * Fixed assignment operator bug in error handling for invalid credentials [#35](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/35)
+    * Fixed `group_identifier` typo - now accepts both spellings with backwards compatibility [#36](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/36)
+    * Fixed empty `gidNumber` producing broken LDAP filter on non-posixAccount setups [#36](https://github.com/trilbymedia/grav-plugin-login-ldap/pulls/36)
+
 # v1.1.0
 ## 04/16/2024
 
