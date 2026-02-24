@@ -5,6 +5,9 @@ version: 3
 ssl: false
 start_tls: false
 opt_referrals: false
+search_bind_enabled: false
+search_bind_dn:
+search_bind_password:
 user_dn: 'uid=[username],dc=company,dc=com'
 search_dn:
 group_dn:

@@ -83,7 +83,9 @@ class LoginLDAPPlugin extends Plugin
         $search_dn          = $this->config->get('plugins.login-ldap.search_dn');
         $group_dn           = $this->config->get('plugins.login-ldap.group_dn');
         $group_query        = $this->config->get('plugins.login-ldap.group_query');
-        $group_indentifier  = $this->config->get('plugins.login-ldap.group_indentifier');
+        // Support both the original typo (group_indentifier) and the correct spelling (group_identifier)
+        $group_indentifier  = $this->config->get('plugins.login-ldap.group_indentifier')
+                              ?? $this->config->get('plugins.login-ldap.group_identifier', 'cn');
 
         $username   = str_replace('[username]', $credentials['username'], $user_dn);
 
@@ -95,6 +97,11 @@ class LoginLDAPPlugin extends Plugin
         $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
         $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
         $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
+
+        // Dedicated search bind account (for when regular users lack search permissions)
+        $search_bind_enabled  = $this->config->get('plugins.login-ldap.search_bind_enabled', false);
+        $search_bind_dn       = $this->config->get('plugins.login-ldap.search_bind_dn');
+        $search_bind_password = $this->config->get('plugins.login-ldap.search_bind_password');
 
         if (is_null($host)) {
             throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
@@ -110,8 +117,7 @@ class LoginLDAPPlugin extends Plugin
         }
 
         try {
-            /** @var Ldap $ldap */
-            $ldap = Ldap::create('ext_ldap', array(
+            $ldap_config = array(
                 'host' => $host,
                 'port' => $port,
                 'encryption' => $encryption,
@@ -119,7 +125,10 @@ class LoginLDAPPlugin extends Plugin
                     'protocol_version' => $version,
                     'referrals' => (bool) $opt_referrals,
                 ),
-            ));
+            );
+
+            /** @var Ldap $ldap */
+            $ldap = Ldap::create('ext_ldap', $ldap_config);
 
             // Map Info
             $map_username = $this->config->get('plugins.login-ldap.map_username');
@@ -130,8 +139,17 @@ class LoginLDAPPlugin extends Plugin
             // Try to login via LDAP
             $ldap->bind($username, $credentials['password']);
 
+            // Set up search LDAP connection (use dedicated bind if configured)
+            if ($search_bind_enabled && $search_bind_dn) {
+                /** @var Ldap $searchLdap */
+                $searchLdap = Ldap::create('ext_ldap', $ldap_config);
+                $searchLdap->bind($search_bind_dn, $search_bind_password);
+            } else {
+                $searchLdap = $ldap;
+            }
+
             // Create Grav User
-            $grav_user = User::load(strtolower($username));
+            $grav_user = User::load(strtolower($credentials['username']));
 
             // Set defaults with only thing we know... username provided
             $grav_user['login'] = $credentials['username'];
@@ -141,7 +159,7 @@ class LoginLDAPPlugin extends Plugin
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
                 $query_string = $map_username .'='. $credentials['username'];
-                $query = $ldap->query($search_dn, $query_string);
+                $query = $searchLdap->query($search_dn, $query_string);
                 $results = $query->execute()->toArray();
 
                 // Get LDAP Data
@@ -179,13 +197,16 @@ class LoginLDAPPlugin extends Plugin
                 if ($group_dn) {
                     // retrieves all extra groups for user
                     $group_query = str_replace('[username]', $credentials['username'], $group_query);
-                    $group_query = str_replace('[dn]', $ldap->escape($userdata['dn'], '', LdapInterface::ESCAPE_FILTER), $group_query);
-                    $query = $ldap->query($group_dn, $group_query);
+                    $group_query = str_replace('[dn]', $searchLdap->escape($userdata['dn'], '', LdapInterface::ESCAPE_FILTER), $group_query);
+                    $query = $searchLdap->query($group_dn, $group_query);
                     $groups = $query->execute()->toArray();
 
-                    // retrieve current primary group for user
-                    $query = $ldap->query($group_dn, 'gidnumber=' . $this->getLDAPMappedItem('gidNumber', $ldap_data));
-                    $groups = array_merge($groups, $query->execute()->toArray());
+                    // retrieve current primary group for user (posixGroup support)
+                    $gidNumber = $this->getLDAPMappedItem('gidNumber', $ldap_data);
+                    if (!empty($gidNumber)) {
+                        $query = $searchLdap->query($group_dn, 'gidnumber=' . $gidNumber);
+                        $groups = array_merge($groups, $query->execute()->toArray());
+                    }
 
                     foreach ($groups as $group) {
                         $attributes = $group->getAttributes();
@@ -258,7 +279,7 @@ class LoginLDAPPlugin extends Plugin
             $this->grav['log']->error('plugin.login-ldap: ['. $e->getCode() . '] ' . $username . ' - ' . $message);
 
             // Just return so other authenticators can take a shot...
-            if ($message = "Invalid credentials") {
+            if ($message == "Invalid credentials") {
                 return;
             }
 
