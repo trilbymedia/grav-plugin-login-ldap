@@ -97,6 +97,7 @@ class LoginLDAPPlugin extends Plugin
         $start_tls          = $this->config->get('plugins.login-ldap.start_tls');
         $opt_referrals      = $this->config->get('plugins.login-ldap.opt_referrals');
         $blacklist          = $this->config->get('plugins.login-ldap.blacklist_ldap_fields', []);
+        $ignore_ssl_error   = $this->config->get('plugins.login-ldap.ignore_ssl_errors');
 
         // Dedicated search bind account (for when regular users lack search permissions)
         $search_bind_enabled  = $this->config->get('plugins.login-ldap.search_bind_enabled', false);
@@ -114,6 +115,10 @@ class LoginLDAPPlugin extends Plugin
             $encryption = 'tls';
         } else {
             $encryption = 'none';
+        }
+
+        if ($ignore_ssl_error) {
+            putenv('LDAPTLS_REQCERT=never');
         }
 
         try {
