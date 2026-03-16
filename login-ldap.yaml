@@ -17,6 +17,7 @@ map_username: uid
 map_fullname: givenName lastName
 map_email: mail
 map_dn: distinguishedName
+map_title: title
 
 save_grav_user: false
 store_ldap_data: false

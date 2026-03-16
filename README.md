@@ -51,6 +51,7 @@ map_username: uid
 map_fullname: givenName lastName
 map_email: mail
 map_dn: distinguishedName
+map_title: title
 save_grav_user: false
 store_ldap_data: false
 default_access_levels:
@@ -94,6 +95,7 @@ default_access_levels:
 |map_fullname|LDAP Attribute(s) that contains the user's full name | [default: `givenName lastName`] |
 |map_email|LDAP Attribute(s) that contains the user's email address | [default: `mail`] |
 |map_dn|LDAP Attribute that contains the user's DN String | [default: `distinguishedName`] |
+|map_title|LDAP Attribute that contains the user's title | [default: `title`] |
 
 ### Examples
 
