@@ -1,5 +1,5 @@
 name: Login LDAP
-version: 1.2.0
+version: 1.2.1
 description: Allows for Grav user authentication against an LDAP Server such as OpenLDAP or ActiveDirectory
 icon: user-circle-o
 author:
@@ -11,6 +11,9 @@ keywords: grav, plugin, login, ldap, active directory, authentication
 bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
 docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
 license: MIT
+
+compatibility:
+  grav: ['1.7', '2.0']
 
 dependencies:
   - { name: login, version: '>=3.0.0' }
