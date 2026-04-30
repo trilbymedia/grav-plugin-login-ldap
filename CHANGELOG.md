@@ -1,3 +1,10 @@
+# v1.2.1
+## 04/29/2026
+
+1. [](#bugfix)
+    * Fixed hard fatal during admin login when the LDAP host wasn't configured — now returns gracefully so the standard file-based authenticator can handle the request
+    * Fixed PHP 8.1+ deprecation notice — explicit string casts where `null` was being passed to string-typed function arguments.
+
 # v1.2.0
 ## 02/24/2026
 

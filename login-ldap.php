@@ -103,8 +103,13 @@ class LoginLDAPPlugin extends Plugin
         $search_bind_dn       = $this->config->get('plugins.login-ldap.search_bind_dn');
         $search_bind_password = $this->config->get('plugins.login-ldap.search_bind_password');
 
-        if (is_null($host)) {
-            throw new ConnectionException('FATAL: LDAP host entry missing in plugin configuration...');
+        // If the LDAP host isn't configured, this plugin can't authenticate
+        // anything — bail out without setting a status so the login event
+        // continues to other authenticators (e.g., the file-based one). The
+        // plugin can be installed-but-unconfigured on sites that don't use
+        // LDAP, so a hard fatal here would block all admin logins.
+        if (is_null($host) || $host === '') {
+            return;
         }
 
         // Set Encryption
@@ -149,7 +154,7 @@ class LoginLDAPPlugin extends Plugin
             }
 
             // Create Grav User
-            $grav_user = User::load(strtolower($credentials['username']));
+            $grav_user = User::load(strtolower((string) $credentials['username']));
 
             // Set defaults with only thing we know... username provided
             $grav_user['login'] = $credentials['username'];
@@ -251,7 +256,7 @@ class LoginLDAPPlugin extends Plugin
 
             // Give Admin Access
             $admin_access = $this->config->get('plugins.login-ldap.default_access_levels.access.groups');
-            if ($admin_access && count($user_groups) && strlen($admin_access) > 0) {
+            if ($admin_access && count($user_groups) && strlen((string) $admin_access) > 0) {
                 $groups_access = Yaml::parse($admin_access);
                 foreach ($groups_access as $key => $group_access) {
                     if (in_array($key, $user_groups)) {
@@ -309,7 +314,7 @@ class LoginLDAPPlugin extends Plugin
     protected function getLDAPMappedItem($map, $ldap_data)
     {
         $item_bits = [];
-        $map_bits = explode(' ', $map);
+        $map_bits = explode(' ', (string) $map);
         foreach($map_bits as $bit) {
             if(isset($ldap_data[$bit])) {
             $item_bits[] = array_shift($ldap_data[$bit]);
