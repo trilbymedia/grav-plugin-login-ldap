@@ -269,6 +269,9 @@ class LoginLDAPPlugin extends Plugin
             // Optional save
             if ($this->config->get('plugins.login-ldap.save_grav_user', false)) {
                 $grav_user->save();
+            } elseif ($this->localAccountRequired()) {
+                $this->grav['log']->warning('plugin.login-ldap: saved a local Grav account for "' . $credentials['username'] . '" because the API plugin is enabled and API authentication requires one. Set save_grav_user: true to make this explicit and silence this message.');
+                $grav_user->save();
             }
 
             $event->setUser($grav_user);
@@ -309,6 +312,28 @@ class LoginLDAPPlugin extends Plugin
     public function userLogout(UserLoginEvent $event)
     {
         // This gets fired on user logout.
+    }
+
+    /**
+     * Whether this site needs the LDAP user persisted to `user/accounts/` even
+     * though `save_grav_user` is off.
+     *
+     * The Grav API plugin (which powers the Grav 2.0 admin) is stateless: the
+     * JWT it issues carries only the username, so every later request reloads
+     * the account from disk and throws the token out when no file exists. An
+     * LDAP user who is never saved therefore authenticates fine and is then
+     * rejected on the very next call, which the admin reports to the user as
+     * "Session expired". Its session authenticator has the same requirement.
+     *
+     * Persisting the account is the only configuration that works there, so
+     * save it anyway rather than leaving the login quietly broken.
+     *
+     * @see https://github.com/trilbymedia/grav-plugin-login-ldap/issues/37
+     * @return bool
+     */
+    protected function localAccountRequired()
+    {
+        return (bool) $this->config->get('plugins.api.enabled', false);
     }
 
     protected function getLDAPMappedItem($map, $ldap_data)
