@@ -21,7 +21,7 @@ PLUGIN_LOGIN_LDAP:
   PORT: 'Port'
   PORT_DESC: 'Port to connect to host'
   SAVE_GRAV_USER: 'Save Grav user'
-  SAVE_GRAV_USER_DESC: 'Saves the logged in user as a local Grav account'
+  SAVE_GRAV_USER_DESC: 'Saves the logged in user as a local Grav account. Always on when the API plugin is enabled, because API and Grav 2.0 admin logins need a local account to stay signed in'
   STORE_LDAP_USER: 'Store LDAP data'
   STORE_LDAP_USER_DESC: 'You can also store LDAP data on the logged in user object to use in Grav'
   SERVER_CONFIGURATION: 'Server Configuration'
