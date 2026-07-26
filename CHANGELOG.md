@@ -1,3 +1,9 @@
+# v1.2.2
+## 07/26/2026
+
+1. [](#bugfix)
+    * LDAP logins no longer fail immediately after succeeding on Grav 2.0. The user is now saved to `accounts/` whenever the API plugin is enabled, which is what the Grav 2.0 admin needs to keep you signed in, and a note is written to the log explaining it ([#37](https://github.com/trilbymedia/grav-plugin-login-ldap/issues/37)).
+
 # v1.2.1
 ## 04/29/2026
 

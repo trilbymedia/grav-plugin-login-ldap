@@ -115,7 +115,7 @@ default_access_levels:
 
 |Key                   |Description                 | Values |
 |:---------------------|:---------------------------|:-------|
-|save_grav_user|Store the grav user account as a local YAML account | true \| [default: `false`] |
+|save_grav_user|Store the grav user account as a local YAML account. Forced on when the API plugin is enabled, see [Grav 2.0 and the API plugin](#grav-20-and-the-api-plugin) | true \| [default: `false`] |
 |store_ldap_data|If storing a local Grav user, you can also store LDAP data so its available in Grav| true \| [default: `false`] |
 |default_access_levels.groups|Set a default group for all users logging in via LDAP [OPTIONAL] | e.g. `ldap_users` |
 |default_access_levels.access.site|Set the default **site access** for all users logging in via LDAP (used if no `access.groups` mapping applies) | e.g. `[login: 'true']` |
@@ -177,6 +177,12 @@ If you want to be able to set user data (extra fields, or specific user access) 
 > NOTE: Any attribute stored under the `ldap:` key in the user account file will be overwritten by the plugin during the next login.  This information is always in sync with latest data in the LDAP server.  The same rule goes for the **mapped** fields.  So updating `email` in your LDAP directory will ensure the entry in the local Grav user is updated on next login.
 >  
 > Also note that the password will never be stored in the Grav user under `accounts/`.
+
+#### Grav 2.0 and the API plugin
+
+The Grav 2.0 admin talks to the site over the REST API provided by the **API plugin**, and that API is stateless. The token it hands out after a successful login carries nothing but the username, so every request after the login reloads the account from `accounts/` and rejects the token when there is no file there. An LDAP user who is never saved locally will therefore log in successfully and then be refused on the very next request, which the admin reports as *"Session expired — please re-enter your password to continue"*.
+
+Because of this, whenever the API plugin is enabled the LDAP user is saved to `accounts/` even if `save_grav_user` is off, and a warning is written to the Grav log explaining why. Setting `save_grav_user: true` makes that explicit and silences the warning. Sites that only use LDAP for front-end logins, with no API plugin installed, are unaffected and keep the stateless behavior.
 
 ### Blacklist LDAP Fields
 
