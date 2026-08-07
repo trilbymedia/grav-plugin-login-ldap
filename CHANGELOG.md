@@ -1,3 +1,9 @@
+# v1.2.3
+## 08/07/2026
+
+1. [](#bugfix)
+    * An unreachable LDAP server no longer blocks every login on the site, so local Grav accounts can still sign in while the directory is down.
+
 # v1.2.2
 ## 07/26/2026
 

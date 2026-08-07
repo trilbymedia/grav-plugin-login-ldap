@@ -286,14 +286,9 @@ class LoginLDAPPlugin extends Plugin
 
             $this->grav['log']->error('plugin.login-ldap: ['. $e->getCode() . '] ' . $username . ' - ' . $message);
 
-            // Just return so other authenticators can take a shot...
-            if ($message == "Invalid credentials") {
-                return;
-            }
-
-            $event->setStatus($event::AUTHENTICATION_FAILURE);
-            $event->stopPropagation();
-
+            // Just return so other authenticators can take a shot — whether LDAP
+            // rejected the credentials or could not be reached at all. An
+            // unreachable directory must not lock out local Grav accounts.
             return;
         }
 
