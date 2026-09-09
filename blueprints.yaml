@@ -6,7 +6,6 @@ author:
   name: Trilby Media
   email: hello@trilby.media
 homepage: https://github.com/trilbymedia/grav-plugin-login-ldap
-demo: http://demo.yoursite.com
 keywords: grav, plugin, login, ldap, active directory, authentication
 bugs: https://github.com/trilbymedia/grav-plugin-login-ldap/issues
 docs: https://github.com/trilbymedia/grav-plugin-login-ldap/blob/develop/README.md
