@@ -1,3 +1,9 @@
+# v1.2.4
+## 09/09/2026
+
+1. [](#bugfix)
+    * Removed the placeholder `demo` URL from the plugin manifest, so the download page no longer shows a Demo button pointing at a parked domain
+
 # v1.2.3
 ## 08/07/2026
 
